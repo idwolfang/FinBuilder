@@ -20,10 +20,11 @@
         <section class="panel">
             <h2>報價圖片產生器</h2>
 
-            <label>報價日期</label>
-            <input id="quoteDate" type="date" />
-
-            <button id="fetchPrice" type="button">抓取參考進場價</button>
+            <div class="date-wrapper">
+                <label>報價日期</label>
+                <input id="quoteDate" type="date" />
+                <button id="fetchPrice" type="button">抓取參考進場價</button>
+            </div>
 
             <p id="priceStatus"></p>
 
@@ -115,6 +116,7 @@
                 <div class="field">
                     <label>發行機構</label>
                     <select id="issuer">
+                        <option value="-" selected>-</option>
                         <option value="Barclays 巴克萊證券">Barclays 巴克萊證券</option>
                         <option value="BBVA 西班牙對外銀行">BBVA 西班牙對外銀行</option>
                         <option value="BNP 法國巴黎銀行">BNP 法國巴黎銀行</option>
@@ -186,13 +188,22 @@
                         <label><input type="checkbox" name="stock" value="VST" data-name="維斯達公司" /> VST 維斯達公司</label>
                         <label><input type="checkbox" name="stock" value="X" data-name="美國鋼鐵" /> X 美國鋼鐵</label>
                     </div>
+
+                    <div>
+                        <h4>ETF</h4>
+                        <label><input type="checkbox" name="stock" value="QQQ" data-name="納斯達克" /> QQQ 納斯達克</label>
+                        <label><input type="checkbox" name="stock" value="VOO" data-name="S&P500" /> VOO S&P500</label>
+                        <label><input type="checkbox" name="stock" value="SPY" data-name="S&P500" /> SPY S&P500</label>
+                        <label><input type="checkbox" name="stock" value="SMH" data-name="半導體" /> SMH 半導體</label>
+                    </div>
                 </div>
             </div>
 
             <button id="generateQuote" type="button">產生報價圖片</button>
-            <button id="downloadQuote" type="button">下載 PNG 圖片</button>
 
-            <div id="quotePreview" class="quote-preview"></div>
+            <div class="offscreen-container">
+                <div id="quotePreview" class="quote-preview"></div>
+            </div>
 
         </section>
 
@@ -205,6 +216,16 @@
             </ol>
         </aside>
     </main>
+
+    <div id="previewModal" class="modal-overlay">
+        <div class="modal-content">
+            <img id="previewImg" src="" alt="報價預覽圖片" />
+            <div class="modal-actions">
+                <button id="downloadModal" type="button">⬇️ 下載 PNG 圖片</button>
+                <button id="closeModal" type="button" class="btn-close">✖ 關閉</button>
+            </div>
+        </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <script src="script.js"></script>

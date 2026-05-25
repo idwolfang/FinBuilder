@@ -1,7 +1,4 @@
-﻿/* =========================================
-   1. 網頁全域與基礎設定 (保留你原本的)
-   ========================================= */
-* {
+﻿* {
     box-sizing: border-box;
 }
 
@@ -26,6 +23,7 @@ body {
     font-weight: 700;
     font-size: 18px;
     margin-right: 16px;
+    white-space: nowrap; /* 確保主旨不折行 */
 }
 
 .topbar a {
@@ -33,6 +31,7 @@ body {
     text-decoration: none;
     font-size: 14px;
     padding: 13px 12px;
+    white-space: nowrap;
 }
 
     .topbar a.active {
@@ -41,9 +40,6 @@ body {
         border-radius: 4px;
     }
 
-/* =========================================
-   2. 主版面與控制面板 (保留你原本的)
-   ========================================= */
 .layout {
     display: grid;
     grid-template-columns: minmax(0, 1.4fr) minmax(320px, 0.9fr);
@@ -71,15 +67,19 @@ body {
     padding-bottom: 20px;
 }
 
-    .panel label {
+/* 修復報價日期破版問題 */
+.date-wrapper {
+    padding: 0 18px;
+}
+
+    .date-wrapper label {
         display: block;
-        margin: 18px 18px 8px;
+        margin: 18px 0 8px;
         font-size: 14px;
     }
 
-    .panel select, .panel input {
-        width: calc(100% - 36px);
-        margin: 0 18px;
+    .date-wrapper input {
+        width: 100%;
         height: 36px;
         border: 1px solid #cbd3df;
         border-radius: 6px;
@@ -152,8 +152,9 @@ button {
 
 .stock-columns {
     display: grid;
-    grid-template-columns: repeat(3, minmax(160px, 1fr));
-    gap: 24px;
+    /* 配合新增的 ETF 變更為 4 欄 */
+    grid-template-columns: repeat(4, minmax(130px, 1fr));
+    gap: 20px;
 }
 
     .stock-columns h4 {
@@ -184,14 +185,16 @@ button {
     font-weight: 600;
 }
 
-.quote-preview {
-    margin: 22px 18px 0;
-}
-
+/* =========================================
+   手機版響應式修正 (RWD)
+   ========================================= */
 @media (max-width: 1100px) {
-    .form-grid,
-    .stock-columns {
+    .form-grid {
         grid-template-columns: repeat(2, minmax(160px, 1fr));
+    }
+
+    .stock-columns {
+        grid-template-columns: repeat(3, minmax(130px, 1fr));
     }
 }
 
@@ -200,12 +203,25 @@ button {
         grid-template-columns: 1fr;
     }
 
-    .topbar {
-        overflow-x: auto;
+    .stock-columns {
+        grid-template-columns: repeat(2, minmax(130px, 1fr));
     }
+    /* 修復上方選單直排問題 */
+    .topbar {
+        height: auto;
+        min-height: 46px;
+        flex-wrap: wrap;
+        padding: 8px 16px;
+        gap: 8px 12px;
+    }
+
+        .topbar a {
+            padding: 6px 10px;
+            font-size: 13px;
+        }
 }
 
-@media (max-width: 700px) {
+@media (max-width: 600px) {
     .form-grid,
     .stock-columns {
         grid-template-columns: 1fr;
@@ -213,84 +229,144 @@ button {
 }
 
 /* =========================================
-   3. 全新高質感報價圖片區域 (替換掉舊的)
+   離線擷取區塊與燈箱 (Modal) 設計
    ========================================= */
+
+/* 隱藏擷取區塊，避免手機畫面變大 */
+.offscreen-container {
+    position: absolute;
+    top: 0;
+    left: -9999px;
+    width: 800px;
+}
+
+.quote-preview {
+    margin: 0;
+}
 
 #capture-area {
     background-color: #ffffff;
     width: 800px;
     padding: 30px;
-    margin: 20px auto;
+    margin: 0;
 }
 
+/* 燈箱背景遮罩 */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+    .modal-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+/* 燈箱內容 */
+.modal-content {
+    max-width: 95%;
+    max-height: 80vh;
+    overflow-y: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    background: white;
+}
+
+    .modal-content img {
+        display: block;
+        width: 100%;
+        height: auto;
+    }
+
+/* 燈箱按鈕列 */
+.modal-actions {
+    margin-top: 20px;
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+}
+
+    .modal-actions button {
+        margin: 0;
+        height: 44px;
+        font-size: 15px;
+    }
+
+.btn-close {
+    background: #64748b;
+}
+
+    .btn-close:hover {
+        background: #475569;
+    }
+
+/* =========================================
+   全新高質感報價圖片表格
+   ========================================= */
 .modern-quote-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 15px; /* 稍微縮小字體，讓排版更精緻 */
+    font-size: 15px;
     border: 2px solid #94a3b8;
-    table-layout: fixed; /* 【關鍵 1】啟動固定排版，右側 4 欄會自動完美平分剩餘空間 */
+    table-layout: fixed;
 }
 
     .modern-quote-table td {
         border: 1px solid #cbd5e1;
-        padding: 6px 10px; /* 【關鍵 2】將上下 padding 從 12px 砍半到 6px，大幅縮小整體表格高度 */
+        padding: 6px 10px;
         text-align: center;
         vertical-align: middle;
-        white-space: nowrap; /* 【關鍵 3】強制所有文字絕對不換行 */
+        white-space: nowrap;
     }
 
-/* 1. 修改英文標籤：增加內縮 padding，維持靠左 */
-/* 1. 調整第一欄（英文標籤）寬度：從 15% 調大到 22% */
 .label-en {
-    background-color: #f8fafc;
     color: #475569;
     font-weight: 600;
     text-align: left !important;
     padding-left: 20px !important;
-    width: 22% !important; /* 加寬讓英文單字完整舒展 */
+    width: 22% !important;
 }
 
-/* 2. 調整第二欄（中文標籤）寬度：從 18% 調大到 20% */
 .modern-quote-table tbody:first-of-type tr td:nth-child(2) {
-    width: 20% !important; /* 加寬中文欄位 */
+    width: 20% !important;
 }
 
-/* 2. 修改中文標籤：從置中改為「靠左 + 內縮」 */
 .label-zh {
-    background-color: #f1f5f9;
     color: #334155;
     font-weight: bold;
-    text-align: left !important; /* 【關鍵】改成靠左對齊 */
-    padding-left: 20px !important; /* 【關鍵】與英文標籤對齊 */
+    text-align: left !important;
+    padding-left: 20px !important;
 }
 
-/* 3. 下半部表格的「連結標的」大標題：維持置中比較好看，這裡獨立把它抓出來置中 */
 .modern-quote-table .bottom-section .align-middle {
     text-align: center !important;
     padding-left: 10px !important;
 }
 
 .value-highlight {
-    color: #b91c1c;
+    color: #dc2626; /* 調整為更符合圖片的紅色 */
     font-weight: bold;
     font-size: 18px;
     letter-spacing: 0.5px;
 }
 
 .issuer-title {
-    color: #b91c1c;
+    color: #dc2626;
+    font-weight: bold;
     text-align: left !important;
     padding-left: 20px !important;
-}
-
-.issuer-val {
-    color: #0f172a;
-    font-weight: bold;
-    font-size: 18px;
-}
-
-.modern-quote-table .align-middle {
-    vertical-align: middle;
 }
 
 .modern-quote-table .val-sub {
