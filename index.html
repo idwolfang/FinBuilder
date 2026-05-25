@@ -9,11 +9,11 @@
 <body>
     <nav class="topbar">
         <div class="brand">結構型商品</div>
-        <a href="#">總覽</a>
-        <a href="#">商品</a>
-        <a href="#">客戶</a>
+        <a href="#" class="nav-disabled">總覽<span class="status-badge">尚未開放</span></a>
+        <a href="#" class="nav-disabled">商品<span class="status-badge">尚未開放</span></a>
+        <a href="#" class="nav-disabled">客戶<span class="status-badge">尚未開放</span></a>
         <a class="active" href="#">報價</a>
-        <a href="#">報告</a>
+        <a href="#" class="nav-disabled">報告<span class="status-badge">尚未開放</span></a>
     </nav>
 
     <main class="layout">
@@ -72,27 +72,27 @@
 
                 <div class="field">
                     <label>Strike %</label>
-                    <input id="strike" type="number" step="0.01" placeholder="例：70.00" />
+                    <input id="strike" type="number" inputmode="decimal" step="0.01" placeholder="例：70.00" />
                 </div>
 
                 <div class="field">
                     <label id="koLabelText">KO %</label>
-                    <input id="ko" type="number" step="0.01" placeholder="例：50" />
+                    <input id="ko" type="number" inputmode="decimal" step="0.01" placeholder="例：50" />
                 </div>
 
                 <div class="field" id="stepDownField" style="display: none;">
                     <label>每月遞減 %</label>
-                    <input id="stepDown" type="number" step="0.01" placeholder="例：5" />
+                    <input id="stepDown" type="number" inputmode="decimal" step="0.01" placeholder="例：5" />
                 </div>
 
                 <div class="field">
                     <label>Coupon %</label>
-                    <input id="coupon" type="number" step="0.01" placeholder="例：10" />
+                    <input id="coupon" type="number" inputmode="decimal" step="0.01" placeholder="例：10" />
                 </div>
 
                 <div class="field">
                     <label>EKI %</label>
-                    <input id="eki" type="number" step="0.01" placeholder="無則留空" />
+                    <input id="eki" type="number" inputmode="decimal" step="0.01" placeholder="無則留空" />
                 </div>
 
                 <div class="field">
@@ -219,7 +219,9 @@
 
     <div id="previewModal" class="modal-overlay">
         <div class="modal-content">
-            <img id="previewImg" src="" alt="報價預覽圖片" />
+            <div class="img-scroll-container">
+                <img id="previewImg" src="" alt="報價預覽圖片" />
+            </div>
             <div class="modal-actions">
                 <button id="downloadModal" type="button">⬇️ 下載 PNG 圖片</button>
                 <button id="closeModal" type="button" class="btn-close">✖ 關閉</button>
