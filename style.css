@@ -9,15 +9,12 @@ body {
     color: #0f1b33;
 }
 
-/* =========================================
-   導覽列優化
-   ========================================= */
 .topbar {
     height: 46px;
     background: #101a2e;
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 24px;
     padding: 0 24px;
 }
 
@@ -26,7 +23,7 @@ body {
     font-weight: 700;
     font-size: 18px;
     margin-right: 16px;
-    white-space: nowrap;
+    white-space: nowrap; /* 確保主旨不折行 */
 }
 
 .topbar a {
@@ -35,9 +32,6 @@ body {
     font-size: 14px;
     padding: 13px 12px;
     white-space: nowrap;
-    display: flex;
-    align-items: center;
-    gap: 4px;
 }
 
     .topbar a.active {
@@ -46,24 +40,6 @@ body {
         border-radius: 4px;
     }
 
-    /* 尚未開放選項的特殊淡化樣式 */
-    .topbar a.nav-disabled {
-        color: #576785;
-        pointer-events: none; /* 讓它完全無法點擊 */
-    }
-
-.status-badge {
-    font-size: 10px;
-    background: rgba(255, 255, 255, 0.08);
-    color: #7a8ea3;
-    padding: 1px 5px;
-    border-radius: 4px;
-    font-weight: normal;
-}
-
-/* =========================================
-   主版面與控制面板
-   ========================================= */
 .layout {
     display: grid;
     grid-template-columns: minmax(0, 1.4fr) minmax(320px, 0.9fr);
@@ -91,31 +67,25 @@ body {
     padding-bottom: 20px;
 }
 
-    /* =========================================
-   【終極修復】報價日期破版問題
-   ========================================= */
-    .panel .date-wrapper {
-        padding: 0 18px;
+/* 修復報價日期破版問題 */
+.date-wrapper {
+    padding: 0 18px;
+}
+
+    .date-wrapper label {
+        display: block;
+        margin: 18px 0 8px;
+        font-size: 14px;
     }
 
-        .panel .date-wrapper label {
-            display: block;
-            margin: 18px 0 8px;
-            font-size: 14px;
-        }
-
-        /* 加上 #quoteDate 賦予最高權重，強制覆蓋所有舊設定 */
-        .panel .date-wrapper input#quoteDate {
-            width: 100% !important;
-            max-width: 100% !important;
-            margin: 0 !important;
-            box-sizing: border-box !important;
-            height: 36px;
-            border: 1px solid #cbd3df;
-            border-radius: 6px;
-            padding: 0 12px;
-            font-size: 14px;
-        }
+    .date-wrapper input {
+        width: 100%;
+        height: 36px;
+        border: 1px solid #cbd3df;
+        border-radius: 6px;
+        padding: 0 12px;
+        font-size: 14px;
+    }
 
 button {
     margin: 22px 18px 0;
@@ -182,6 +152,7 @@ button {
 
 .stock-columns {
     display: grid;
+    /* 配合新增的 ETF 變更為 4 欄 */
     grid-template-columns: repeat(4, minmax(130px, 1fr));
     gap: 20px;
 }
@@ -235,20 +206,17 @@ button {
     .stock-columns {
         grid-template-columns: repeat(2, minmax(130px, 1fr));
     }
-
-    /* 修正頂部選單手機滑動排版 */
+    /* 修復上方選單直排問題 */
     .topbar {
         height: auto;
         min-height: 46px;
-        flex-wrap: nowrap;
-        overflow-x: auto; /* 寬度不夠時允許橫向滑動，不折行 */
-        padding: 0 16px;
-        gap: 8px;
-        -webkit-overflow-scrolling: touch;
+        flex-wrap: wrap;
+        padding: 8px 16px;
+        gap: 8px 12px;
     }
 
         .topbar a {
-            padding: 12px 8px;
+            padding: 6px 10px;
             font-size: 13px;
         }
 }
@@ -261,8 +229,10 @@ button {
 }
 
 /* =========================================
-   離線儲存與燈箱 (Modal) 高質感優化
+   離線擷取區塊與燈箱 (Modal) 設計
    ========================================= */
+
+/* 隱藏擷取區塊，避免手機畫面變大 */
 .offscreen-container {
     position: absolute;
     top: 0;
@@ -281,14 +251,14 @@ button {
     margin: 0;
 }
 
-/* 燈箱背景 */
+/* 燈箱背景遮罩 */
 .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(15, 23, 42, 0.85); /* 更有質感的深邃藍黑 */
+    background: rgba(0, 0, 0, 0.85);
     z-index: 9999;
     display: flex;
     flex-direction: column;
@@ -296,7 +266,7 @@ button {
     justify-content: center;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.25s ease;
+    transition: opacity 0.3s ease;
 }
 
     .modal-overlay.active {
@@ -304,81 +274,42 @@ button {
         pointer-events: auto;
     }
 
-/* 燈箱本體容器改裝 */
+/* 燈箱內容 */
 .modal-content {
-    width: 90%;
-    max-width: 480px; /* 控制在黃金手機寬度，讓按鈕與卡片完美收納 */
-    background: #f8fafc;
-    border-radius: 16px; /* 更圓潤溫暖的圓角 */
-    padding: 16px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-/* 圖片滾動遮罩，確保表格能完整縮放顯示 */
-.img-scroll-container {
-    width: 100%;
-    overflow-x: auto;
+    max-width: 95%;
+    max-height: 80vh;
+    overflow-y: auto;
     border-radius: 8px;
-    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
     background: white;
 }
 
-.modal-content img {
-    display: block;
-    width: 100%;
-    height: auto;
-}
+    .modal-content img {
+        display: block;
+        width: 100%;
+        height: auto;
+    }
 
-/* 【重磅重構】：高質感 App 風格膠囊按鈕列 */
+/* 燈箱按鈕列 */
 .modal-actions {
-    margin-top: 16px;
+    margin-top: 20px;
     display: flex;
-    gap: 12px;
-    width: 100%;
+    gap: 16px;
     justify-content: center;
 }
 
     .modal-actions button {
-        flex: 1;
         margin: 0;
-        height: 42px;
-        border-radius: 21px; /* 完美膠囊弧度 */
-        font-size: 14px;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 4px 12px rgba(31, 61, 115, 0.15);
-        transition: transform 0.1s ease, background 0.2s ease;
+        height: 44px;
+        font-size: 15px;
     }
 
-        .modal-actions button:active {
-            transform: scale(0.97); /* 點擊下沉微動效 */
-        }
-
-/* 下載按鈕高級藍 */
-#downloadModal {
-    background: #1f3d73;
-    color: white;
-}
-
-    #downloadModal:hover {
-        background: #162c54;
-    }
-
-/* 關閉按鈕質感灰 */
 .btn-close {
-    background: #e2e8f0;
-    color: #475569;
-    border: 1px solid #cbd5e1;
-    box-shadow: none !important;
+    background: #64748b;
 }
 
     .btn-close:hover {
-        background: #cbd5e1;
+        background: #475569;
     }
 
 /* =========================================
@@ -425,7 +356,7 @@ button {
 }
 
 .value-highlight {
-    color: #dc2626;
+    color: #dc2626; /* 調整為更符合圖片的紅色 */
     font-weight: bold;
     font-size: 18px;
     letter-spacing: 0.5px;
