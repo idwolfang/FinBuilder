@@ -104,18 +104,23 @@ body {
     font-size: 14px;
 }
 
-/* 加上 #quoteDate 賦予最高權重，強制覆蓋所有舊設定 */
-.panel .date-wrapper input#quoteDate {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 !important;
-    box-sizing: border-box !important;
-    height: 36px;
-    border: 1px solid #cbd3df;
-    border-radius: 6px;
-    padding: 0 12px;
-    font-size: 14px;
-}
+    /* 加上 #quoteDate 賦予最高權重，強制覆蓋所有舊設定 */
+    .panel .date-wrapper input#quoteDate {
+        -webkit-appearance: none !important; /* 殺手鐧：拔除蘋果 Safari 預設外觀 */
+        appearance: none !important; /* 殺手鐧：拔除標準瀏覽器預設外觀 */
+        background-color: #ffffff !important; /* 強制改回白底，消除蘋果預設灰底 */
+        color: #0f1b33 !important; /* 確保文字顏色正常 */
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        box-sizing: border-box !important;
+        height: 36px;
+        border: 1px solid #cbd3df;
+        border-radius: 6px;
+        padding: 0 12px;
+        font-size: 14px;
+        display: block !important; /* 確保它乖乖佔滿一行，不會亂跑 */
+    }
 
 button {
     margin: 22px 18px 0;
