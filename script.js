@@ -204,17 +204,45 @@ function renderQuote(form, priceResults) {
         koDisplayHTML = groupedKo.join("<br>");
     }
 
+    // =========================================
+    // EKI 動態顯示控制
+    // 沒輸入 EKI(或 0)時:隱藏上半部 EKI 列 + 下半部 觸及生效價 整欄
+    // 表格從 6 欄變 5 欄,table-layout:fixed 會自動把寬度重分給剩下 3 欄
+    // =========================================
+    const showEki = form.eki > 0;
+    const valueColspan = showEki ? 4 : 3;
+    const issuerColspan = showEki ? 6 : 5;
+
+    const ekiRowHTML = showEki ? `
+        <tr>
+            <td class="label-en" style="background-color: ${labelBgColor};">EKI</td>
+            <td class="label-zh" style="background-color: ${labelBgColor};">觸及生效價</td>
+            <td colspan="${valueColspan}" class="value-highlight">${Number(form.eki).toFixed(2)}%</td>
+        </tr>
+    ` : '';
+
+    const ekiHeaderHTML = showEki
+        ? `<td class="label-zh" style="background-color: ${labelBgColor};">觸及生效價</td>`
+        : '';
+
+    const ekiSubHTML = showEki
+        ? `<td class="val-sub">${Number(form.eki).toFixed(2)}%</td>`
+        : '';
+
     const rows = priceResults.map((item) => {
         const referencePrice = Number(item.close);
-        const ekiPriceText = form.eki > 0 ? formatMoney(referencePrice * (form.eki / 100)) : "-";
         const strikePrice = referencePrice * (form.strike / 100);
         const koPrice = referencePrice * (form.ko / 100);
+
+        const ekiPriceCell = showEki
+            ? `<td class="num-val">${formatMoney(referencePrice * (form.eki / 100))}</td>`
+            : '';
 
         return `
         <tr>
           <td colspan="2" class="stock-name"><strong>${item.symbol}</strong> ${item.name}</td>
           <td class="num-val">${formatMoney(referencePrice)}</td>
-          <td class="num-val">${ekiPriceText}</td>
+          ${ekiPriceCell}
           <td class="num-val">${formatMoney(strikePrice)}</td>
           <td class="num-val">${formatMoney(koPrice)}</td>
         </tr>
@@ -231,50 +259,46 @@ function renderQuote(form, priceResults) {
                 <tr>
                     <td class="label-en" style="background-color: ${labelBgColor};">Type</td>
                     <td class="label-zh" style="background-color: ${labelBgColor};">類型</td>
-                    <td colspan="4" class="value-highlight">${form.productType}</td>
+                    <td colspan="${valueColspan}" class="value-highlight">${form.productType}</td>
                 </tr>
                 <tr>
                     <td class="label-en" style="background-color: ${labelBgColor};">Tenor</td>
                     <td class="label-zh" style="background-color: ${labelBgColor};">天期</td>
-                    <td colspan="4" class="value-highlight">${form.tenor}</td>
+                    <td colspan="${valueColspan}" class="value-highlight">${form.tenor}</td>
                 </tr>
                 <tr>
                     <td class="label-en" style="background-color: ${labelBgColor};">Strike</td>
                     <td class="label-zh" style="background-color: ${labelBgColor};">預計執行價</td>
-                    <td colspan="4" class="value-highlight">${Number(form.strike).toFixed(2)}%</td>
+                    <td colspan="${valueColspan}" class="value-highlight">${Number(form.strike).toFixed(2)}%</td>
                 </tr>
-                <tr>
-                    <td class="label-en" style="background-color: ${labelBgColor};">EKI</td>
-                    <td class="label-zh" style="background-color: ${labelBgColor};">觸及生效價</td>
-                    <td colspan="4" class="value-highlight">${form.eki > 0 ? Number(form.eki).toFixed(2) + '%' : '-'}</td>
-                </tr>
+                ${ekiRowHTML}
                 <tr>
                     <td class="label-en" style="background-color: ${labelBgColor};">KO</td>
                     <td class="label-zh" style="background-color: ${labelBgColor};">出場價</td>
-                    <td colspan="4" class="value-highlight" style="line-height: 1.5;">${koDisplayHTML}</td>
+                    <td colspan="${valueColspan}" class="value-highlight" style="line-height: 1.5;">${koDisplayHTML}</td>
                 </tr>
                 <tr>
                     <td class="label-en" style="background-color: ${labelBgColor};">Coupon</td>
                     <td class="label-zh" style="background-color: ${labelBgColor};">年化報酬率</td>
-                    <td colspan="4" class="value-highlight">${Number(form.coupon).toFixed(2)}%</td>
+                    <td colspan="${valueColspan}" class="value-highlight">${Number(form.coupon).toFixed(2)}%</td>
                 </tr>
                 <tr>
                     <td class="label-en" style="background-color: ${labelBgColor};">KO Start</td>
                     <td class="label-zh" style="background-color: ${labelBgColor};">閉鎖</td>
-                    <td colspan="4" class="value-highlight">${form.koStart}</td>
+                    <td colspan="${valueColspan}" class="value-highlight">${form.koStart}</td>
                 </tr>
                 <tr>
                     <td class="label-en" style="background-color: ${labelBgColor};">${memoryKoLabel}</td>
                     <td class="label-zh" style="background-color: ${labelBgColor};">記憶式</td>
-                    <td colspan="4" class="value-highlight">${form.memoryKo}</td>
+                    <td colspan="${valueColspan}" class="value-highlight">${form.memoryKo}</td>
                 </tr>
                 <tr>
                     <td class="label-en" style="background-color: ${labelBgColor};">Currency</td>
                     <td class="label-zh" style="background-color: ${labelBgColor};">幣別</td>
-                    <td colspan="4" class="value-highlight">${form.currency}</td>
+                    <td colspan="${valueColspan}" class="value-highlight">${form.currency}</td>
                 </tr>
                 <tr>
-                    <td colspan="6" class="issuer-title" style="background-color: ${labelBgColor};">發行機構：${issuerText}</td>
+                    <td colspan="${issuerColspan}" class="issuer-title" style="background-color: ${labelBgColor};">發行機構：${issuerText}</td>
                 </tr>
             </tbody>
             
@@ -282,13 +306,13 @@ function renderQuote(form, priceResults) {
                 <tr>
                     <td colspan="2" rowspan="2" class="label-zh align-middle" style="background-color: ${labelBgColor};">連結標的</td>
                     <td class="label-zh" style="background-color: ${labelBgColor};">參考進場價</td>
-                    <td class="label-zh" style="background-color: ${labelBgColor};">觸及生效價</td>
+                    ${ekiHeaderHTML}
                     <td class="label-zh" style="background-color: ${labelBgColor};">預計執行價</td>
                     <td class="label-zh" style="background-color: ${labelBgColor};">提前出場價</td>
                 </tr>
                 <tr>
                     <td class="val-sub">${formattedDate}</td>
-                    <td class="val-sub">${form.eki > 0 ? Number(form.eki).toFixed(2) + '%' : '-'}</td>
+                    ${ekiSubHTML}
                     <td class="val-sub">${Number(form.strike).toFixed(2)}%</td>
                     <td class="val-sub">${Number(form.ko).toFixed(2)}%</td>
                 </tr>
