@@ -46,10 +46,9 @@ body {
         border-radius: 4px;
     }
 
-    /* 尚未開放選項的特殊淡化樣式 */
     .topbar a.nav-disabled {
         color: #576785;
-        pointer-events: none; /* 讓它完全無法點擊 */
+        pointer-events: none;
     }
 
 .status-badge {
@@ -91,38 +90,37 @@ body {
     padding-bottom: 20px;
 }
 
-/* =========================================
-終極修復】報價日期破版問題
-========================================= */
-.panel .date-wrapper {
-    padding: 0 18px;
-}
-
-.panel .date-wrapper label {
-    display: block;
-    margin: 18px 0 8px;
-    font-size: 14px;
-}
-
-    .panel .date-wrapper input#quoteDate {
-        -webkit-appearance: none !important;
-        appearance: none !important;
-        background-color: #ffffff !important;
-        color: #0f1b33 !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        margin: 0 !important;
-        box-sizing: border-box !important;
-        height: 36px !important;
-        line-height: 36px !important; /* 🌟 加入這行：強制垂直置中 */
-        text-align: center !important; /* 🌟 加上這行：水平置中，視覺更平衡 */
-
-        border: 1px solid #cbd3df;
-        border-radius: 6px;
-        padding: 0 12px;
-        font-size: 14px;
-        display: block !important;
+    /* =========================================
+   【修復】報價日期破版問題
+   ========================================= */
+    .panel .date-wrapper {
+        padding: 0 18px;
     }
+
+        .panel .date-wrapper label {
+            display: block;
+            margin: 18px 0 8px;
+            font-size: 14px;
+        }
+
+        .panel .date-wrapper input#quoteDate {
+            -webkit-appearance: none !important;
+            appearance: none !important;
+            background-color: #ffffff !important;
+            color: #0f1b33 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            margin: 0 !important;
+            box-sizing: border-box !important;
+            height: 36px !important;
+            line-height: 36px !important;
+            text-align: center !important;
+            border: 1px solid #cbd3df;
+            border-radius: 6px;
+            padding: 0 12px;
+            font-size: 14px;
+            display: block !important;
+        }
 
 button {
     margin: 22px 18px 0;
@@ -243,12 +241,11 @@ button {
         grid-template-columns: repeat(2, minmax(130px, 1fr));
     }
 
-    /* 修正頂部選單手機滑動排版 */
     .topbar {
         height: auto;
         min-height: 46px;
         flex-wrap: nowrap;
-        overflow-x: auto; /* 寬度不夠時允許橫向滑動，不折行 */
+        overflow-x: auto;
         padding: 0 16px;
         gap: 8px;
         -webkit-overflow-scrolling: touch;
@@ -268,7 +265,7 @@ button {
 }
 
 /* =========================================
-   離線儲存與燈箱 (Modal) 高質感優化
+   離線儲存與燈箱 (Modal)
    ========================================= */
 .offscreen-container {
     position: absolute;
@@ -281,10 +278,10 @@ button {
     margin: 0;
 }
 
-#capture-area {
+.capture-area {
     background-color: #ffffff;
-    width: 800px;
-    padding: 30px;
+    width: 1080px;
+    padding: 10px;
     margin: 0;
 }
 
@@ -295,7 +292,7 @@ button {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(15, 23, 42, 0.85); /* 更有質感的深邃藍黑 */
+    background: rgba(15, 23, 42, 0.85);
     z-index: 9999;
     display: flex;
     flex-direction: column;
@@ -311,12 +308,12 @@ button {
         pointer-events: auto;
     }
 
-/* 燈箱本體容器改裝 */
+/* 燈箱本體容器 */
 .modal-content {
     width: 90%;
-    max-width: 480px; /* 控制在黃金手機寬度，讓按鈕與卡片完美收納 */
+    max-width: 820px;
     background: #f8fafc;
-    border-radius: 16px; /* 更圓潤溫暖的圓角 */
+    border-radius: 16px;
     padding: 16px;
     box-shadow: 0 20px 40px rgba(0,0,0,0.4);
     display: flex;
@@ -324,7 +321,6 @@ button {
     align-items: center;
 }
 
-/* 圖片滾動遮罩，確保表格能完整縮放顯示 */
 .img-scroll-container {
     width: 100%;
     overflow-x: auto;
@@ -339,7 +335,6 @@ button {
     height: auto;
 }
 
-/* 【重磅重構】：高質感 App 風格膠囊按鈕列 */
 .modal-actions {
     margin-top: 16px;
     display: flex;
@@ -352,7 +347,7 @@ button {
         flex: 1;
         margin: 0;
         height: 42px;
-        border-radius: 21px; /* 完美膠囊弧度 */
+        border-radius: 21px;
         font-size: 14px;
         font-weight: 600;
         display: flex;
@@ -363,10 +358,9 @@ button {
     }
 
         .modal-actions button:active {
-            transform: scale(0.97); /* 點擊下沉微動效 */
+            transform: scale(0.97);
         }
 
-/* 下載按鈕高級藍 */
 #downloadModal {
     background: #1f3d73;
     color: white;
@@ -376,7 +370,6 @@ button {
         background: #162c54;
     }
 
-/* 關閉按鈕質感灰 */
 .btn-close {
     background: #e2e8f0;
     color: #475569;
@@ -389,41 +382,42 @@ button {
     }
 
 /* =========================================
-   全新高質感報價圖片表格
+   報價圖片表格（20px、深黑、欄寬重分配）
    ========================================= */
 .modern-quote-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 15px;
+    font-size: 20px; /* 🔄 全部統一 20px */
     border: 2px solid #94a3b8;
     table-layout: fixed;
 }
 
     .modern-quote-table td {
         border: 1px solid #cbd5e1;
-        padding: 6px 10px;
+        padding: 8px 10px; /* 🔄 微調內距，配合欄寬 */
         text-align: center;
         vertical-align: middle;
         white-space: nowrap;
     }
 
+/* 🔄 左邊兩欄縮窄：22%+20%=42% → 15%+13%=28%，騰出 14% 給右邊 */
 .label-en {
-    color: #475569;
+    color: #000000;
     font-weight: 600;
     text-align: left !important;
-    padding-left: 20px !important;
-    width: 22% !important;
+    padding-left: 16px !important;
+    width: 18% !important; /* 🔄 22% → 15% */
 }
 
 .modern-quote-table tbody:first-of-type tr td:nth-child(2) {
-    width: 20% !important;
+    width: 18% !important; /* 🔄 20% → 13% */
 }
 
 .label-zh {
-    color: #334155;
+    color: #000000;
     font-weight: bold;
-    text-align: left !important;
-    padding-left: 20px !important;
+    text-align: center;
+    padding-left: 16px !important;
 }
 
 .modern-quote-table .bottom-section .align-middle {
@@ -431,34 +425,40 @@ button {
     padding-left: 10px !important;
 }
 
+/* 🔄 右邊四欄平均分配：72% / 4 = 18% each */
+.modern-quote-table .bottom-section td:nth-child(n+3) {
+    width: 16% !important;
+}
+
 .value-highlight {
-    color: #dc2626;
+    color: #dc2626; /* 紅色不變 */
     font-weight: bold;
-    font-size: 18px;
+    font-size: 20px; /* 🔄 統一 20px */
     letter-spacing: 0.5px;
 }
 
 .issuer-title {
-    color: #dc2626;
+    color: #dc2626; /* 紅色不變 */
     font-weight: bold;
+    font-size: 20px;
     text-align: left !important;
-    padding-left: 20px !important;
+    padding-left: 16px !important;
 }
 
 .modern-quote-table .val-sub {
     font-weight: bold;
-    color: #0f172a;
+    color: #000000;
     background-color: #ffffff;
 }
 
 .modern-quote-table .stock-name {
     text-align: left !important;
-    padding-left: 20px !important;
-    color: #0f172a;
+    padding-left: 16px !important;
+    color: #000000;
 }
 
 .modern-quote-table .num-val {
-    color: #0f172a;
+    color: #000000;
     font-weight: 600;
-    font-size: 17px;
+    font-size: 20px; /* 🔄 統一 20px */
 }

@@ -60,7 +60,7 @@ generateQuoteButton.addEventListener("click", async () => {
 
     // 稍微延遲讓 DOM 更新渲染完成
     setTimeout(async () => {
-        const quoteCard = document.querySelector("#capture-area");
+        const quoteCard = document.querySelector(".capture-area");
         if (!quoteCard) return;
 
         try {
@@ -225,7 +225,7 @@ function renderQuote(form, priceResults) {
     const issuerText = form.issuer !== "-" ? form.issuer : "";
 
     quotePreview.innerHTML = `
-    <div id="capture-area" class="quote-card">
+    <div class="capture-area">
         <table class="modern-quote-table">
             <tbody>
                 <tr>
