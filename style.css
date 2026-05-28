@@ -387,7 +387,7 @@ button {
 .modern-quote-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 24px; /* 🔄 全部統一 20px */
+    font-size: 28px; /* 🔄 全部統一 20px */
     border: 2px solid #000000;
     table-layout: fixed;
 }
@@ -405,19 +405,20 @@ button {
     color: #000000;
     font-weight: 600;
     text-align: left !important;
-    padding-left: 16px !important;
-    width: 18% !important; /* 🔄 22% → 15% */
+    padding-left: 10px !important;
+    width: 20% !important; /* 🔄 22% → 15% */
 }
 
 .modern-quote-table tbody:first-of-type tr td:nth-child(2) {
-    width: 18% !important; /* 🔄 20% → 13% */
+    width: 16% !important; /* 🔄 20% → 13% */
 }
 
 .label-zh {
     color: #000000;
     font-weight: bold;
     text-align: center;
-    padding-left: 16px !important;
+    padding-left: 0 !important; /* 🔄 歸零，讓文字真正置中 */
+    padding-right: 0 !important; /* 🔄 新增，確保兩側對稱 */
 }
 
 .modern-quote-table .bottom-section .align-middle {
@@ -440,25 +441,30 @@ button {
 .issuer-title {
     color: #dc2626; /* 紅色不變 */
     font-weight: bold;
-    font-size: 24px;
+    font-size: 28px;
     text-align: left !important;
-    padding-left: 16px !important;
+    padding-left: 10px !important;
 }
 
 .modern-quote-table .val-sub {
     font-weight: bold;
     color: #000000;
-    /* background-color: #ffffff; 暫時移除*/
+    text-align: center !important; /* 🔄 強制置中 */
+    padding-left: 0 !important; /* 🔄 移除預設內距干擾 */
+    padding-right: 0 !important; /* 🔄 移除預設內距干擾 */
 }
 
 .modern-quote-table .stock-name {
     text-align: left !important;
-    padding-left: 16px !important;
+    padding-left: 10px !important;
     color: #000000;
 }
 
 .modern-quote-table .num-val {
     color: #000000;
     font-weight: 600;
-    font-size: 28px; /* 🔄 統一 20px */
+    font-size: 28px;
+    text-align: center !important; /* 🔄 強制置中 */
+    padding-left: 0 !important; /* 🔄 移除預設內距干擾 */
+    padding-right: 0 !important; /* 🔄 移除預設內距干擾 */
 }
