@@ -226,7 +226,7 @@ function renderQuote(form, priceResults) {
         : '';
 
     const ekiSubHTML = showEki
-        ? `<td class="val-sub">${Number(form.eki).toFixed(2)}%</td>`
+        ? `<td class="val-sub" style="background-color: ${labelBgColor};">${Number(form.eki).toFixed(2)}%</td>`
         : '';
 
     const rows = priceResults.map((item) => {
@@ -311,10 +311,10 @@ function renderQuote(form, priceResults) {
                     <td class="label-zh" style="background-color: ${labelBgColor};">提前出場價</td>
                 </tr>
                 <tr>
-                    <td class="val-sub">${formattedDate}</td>
+                    <td class="val-sub" style="background-color: ${labelBgColor};">${formattedDate}</td>
                     ${ekiSubHTML}
-                    <td class="val-sub">${Number(form.strike).toFixed(2)}%</td>
-                    <td class="val-sub">${Number(form.ko).toFixed(2)}%</td>
+                    <td class="val-sub" style="background-color: ${labelBgColor};">${Number(form.strike).toFixed(2)}%</td>
+                    <td class="val-sub" style="background-color: ${labelBgColor};">${Number(form.ko).toFixed(2)}%</td>
                 </tr>
                 ${rows}
             </tbody>
