@@ -387,13 +387,13 @@ button {
 .modern-quote-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 20px; /* 🔄 全部統一 20px */
-    border: 2px solid #94a3b8;
+    font-size: 24px; /* 🔄 全部統一 20px */
+    border: 2px solid #000000;
     table-layout: fixed;
 }
 
     .modern-quote-table td {
-        border: 1px solid #cbd5e1;
+        border: 1px solid #000000;
         padding: 8px 10px; /* 🔄 微調內距，配合欄寬 */
         text-align: center;
         vertical-align: middle;
@@ -433,14 +433,14 @@ button {
 .value-highlight {
     color: #dc2626; /* 紅色不變 */
     font-weight: bold;
-    font-size: 20px; /* 🔄 統一 20px */
+    font-size: 24px; /* 🔄 統一 20px */
     letter-spacing: 0.5px;
 }
 
 .issuer-title {
     color: #dc2626; /* 紅色不變 */
     font-weight: bold;
-    font-size: 20px;
+    font-size: 24px;
     text-align: left !important;
     padding-left: 16px !important;
 }
@@ -460,5 +460,5 @@ button {
 .modern-quote-table .num-val {
     color: #000000;
     font-weight: 600;
-    font-size: 20px; /* 🔄 統一 20px */
+    font-size: 24px; /* 🔄 統一 20px */
 }
