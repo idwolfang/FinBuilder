@@ -186,7 +186,6 @@
                         <label><input type="checkbox" name="stock" value="UBER" data-name="優步" /> UBER 優步</label>
                         <label><input type="checkbox" name="stock" value="UNH" data-name="聯合健康" /> UNH 聯合健康</label>
                         <label><input type="checkbox" name="stock" value="VST" data-name="維斯達公司" /> VST 維斯達公司</label>
-                        <label><input type="checkbox" name="stock" value="X" data-name="美國鋼鐵" /> X 美國鋼鐵</label>
                     </div>
 
                     <div>
@@ -196,6 +195,18 @@
                         <label><input type="checkbox" name="stock" value="SPY" data-name="S&P500" /> SPY S&P500ETF</label>
                         <label><input type="checkbox" name="stock" value="SMH" data-name="半導體" /> SMH 半導體ETF</label>
                     </div>
+                </div>
+            </div>
+
+            <div class="underlyings">
+                <h3>自訂標的</h3>
+                <div class="custom-stock-add">
+                    <input id="customSymbol" type="text" placeholder="英文代號（如 COIN）" maxlength="10" />
+                    <input id="customName" type="text" placeholder="中文名稱（如 幣安所）" maxlength="20" />
+                    <button id="addCustomStock" type="button">＋ 新增</button>
+                </div>
+                <div id="customStockList" class="stock-columns" style="margin-top: 12px;">
+                    <!-- 動態產生的自訂標的勾選格會出現在這裡 -->
                 </div>
             </div>
 
@@ -213,9 +224,15 @@
                 <li>填入 Strike、KO、Coupon 等參數</li>
                 <li>勾選連結標的</li>
                 <li>點擊產生報價圖片</li>
+                <li>將自動生成前次交易日收盤價</li>
+                <li></li>
             </ol>
         </aside>
     </main>
+
+    <footer class="site-footer">
+        © 2026 cyfang｜All rights reserved．本工具由 cyfang 獨立開發，未經授權禁止商業使用。
+    </footer>
 
     <div id="previewModal" class="modal-overlay">
         <div class="modal-content">

@@ -2,6 +2,94 @@
     box-sizing: border-box;
 }
 
+/* =========================================
+   報價表格 - 1~8區 視覺控制面板 (修改這裡即可)
+   =========================================
+   ⚠️ 欄寬連動說明（table-layout: fixed）：
+     表格共 6 欄，上下共用同一組實體欄位：
+       欄1 = z1-width（英文標籤）
+       欄2 = z2-width（中文標籤）
+       欄3~6 = z-col-width × 4（右側四欄）
+     三者相加必須等於 100%。
+     「連結標的」大格 = 欄1+欄2 寬度自動合計，不需另設。
+     「截圖容器」與「燈箱」也有各自變數可直接調整。
+   ========================================= */
+:root {
+    /* ── 全域表格設定 ── */
+    --table-padding: 8px 10px; /* 儲存格內距（上下 左右） */
+    --table-border-color: #001000; /* 表格線顏色 */
+    --table-base-font-size: 28px; /* 表格基礎字體大小（備用） */
+    /* ── 截圖與燈箱尺寸 ── */
+    --capture-width: 1080px; /* 截圖容器寬度（offscreen-container 自動同步） */
+    --capture-padding: 10px; /* 截圖容器白邊 */
+    --modal-max-width: 820px; /* 燈箱最大寬度 */
+    /* ─────────────────────────────────────
+       [區塊 1] 英文標籤 (Type, Tenor, Strike...)
+       ───────────────────────────────────── */
+    --z1-width: 20%; /* ★ 欄寬（z1 + z2 + z-col-width×4 必須 = 100%） */
+    --z1-font-size: 28px;
+    --z1-color: #000000;
+    --z1-align: left; /* left / center / right */
+    --z1-weight: 600;
+    /* ─────────────────────────────────────
+       [區塊 2] 中文標籤 (類型, 天期, 預計執行價...)
+       ───────────────────────────────────── */
+    --z2-width: 16%; /* ★ 欄寬 */
+    --z2-font-size: 28px;
+    --z2-color: #000000;
+    --z2-align: center;
+    --z2-weight: bold;
+    /* ─────────────────────────────────────
+       [區塊 3] 上半部紅字數值 (FCN, 12M, 85.00%...)
+       ───────────────────────────────────── */
+    --z3-font-size: 28px;
+    --z3-color: #dc2626;
+    --z3-align: center;
+    --z3-weight: bold;
+    /* ─────────────────────────────────────
+       [區塊 4] 發行機構列
+       ───────────────────────────────────── */
+    --z4-font-size: 28px;
+    --z4-color: #dc2626;
+    --z4-align: left;
+    --z4-weight: bold;
+    /* ─────────────────────────────────────
+       [區塊 5] 連結標的（左下大格）
+       ───────────────────────────────────── */
+    --z5-font-size: 28px;
+    --z5-color: #000000;
+    --z5-align: center;
+    --z5-weight: bold;
+    /* ─────────────────────────────────────
+       [區塊 6] 股票名稱 (AVGO 博通 / NVDA 輝達...)
+       ───────────────────────────────────── */
+    --z6-font-size: 28px;
+    --z6-color: #000000;
+    --z6-align: left;
+    --z6-weight: normal;
+    /* ─────────────────────────────────────
+       [區塊 7] 底部表頭（參考進場價等標題列＋日期趴數副標列）
+       ★ 欄寬 z-col-width 與區塊 8 共用，見下方說明
+       ───────────────────────────────────── */
+    --z7-font-size: 28px;
+    --z7-color: #000000;
+    --z7-align: center;
+    --z7-weight: bold;
+    /* ─────────────────────────────────────
+       [區塊 8] 底部股價數字 (422.76 / 215.33...)
+       ───────────────────────────────────── */
+    --z8-font-size: 28px;
+    --z8-color: #000000;
+    --z8-align: center;
+    --z8-weight: 600;
+    /* ─────────────────────────────────────
+       ★ 右側四欄共用欄寬（區塊 3 / 7 / 8 共用實體欄）
+         算式：z1-width + z2-width + z-col-width × 4 = 100%
+         預設：20% + 16% + 16%×4 = 100% ✓
+       ───────────────────────────────────── */
+    --z-col-width: 16%;
+}
+
 body {
     margin: 0;
     font-family: "Microsoft JhengHei", Arial, sans-serif;
@@ -90,9 +178,7 @@ body {
     padding-bottom: 20px;
 }
 
-    /* =========================================
-   【修復】報價日期破版問題
-   ========================================= */
+    /* 【修復】報價日期破版問題 */
     .panel .date-wrapper {
         padding: 0 18px;
     }
@@ -213,10 +299,58 @@ button {
         margin: 0;
     }
 
+.custom-stock-add {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 4px 0;
+}
+
+    .custom-stock-add input {
+        height: 36px;
+        border: 1px solid #cbd3df;
+        border-radius: 6px;
+        padding: 0 12px;
+        font-size: 14px;
+        color: #0f1b33;
+        width: 180px;
+    }
+
+    .custom-stock-add button {
+        margin: 0;
+        height: 36px;
+        white-space: nowrap;
+    }
+
+.custom-remove {
+    margin-left: 4px;
+    color: #94a3b8;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+    .custom-remove:hover {
+        color: #dc2626;
+    }
+
 #priceStatus {
     margin: 14px 18px 0;
     color: #183d7a;
     font-weight: 600;
+}
+
+/* =========================================
+   頁尾版權聲明
+   ========================================= */
+.site-footer {
+    background: #101a2e;
+    color: #7a8ea3;
+    text-align: center;
+    font-size: 13px;
+    padding: 14px 24px;
+    letter-spacing: 0.3px;
+    line-height: 1.6;
 }
 
 /* =========================================
@@ -271,7 +405,7 @@ button {
     position: absolute;
     top: 0;
     left: -9999px;
-    width: 1080px;
+    width: var(--capture-width); /* ← 跟著 --capture-width 自動同步 */
 }
 
 .quote-preview {
@@ -280,8 +414,8 @@ button {
 
 .capture-area {
     background-color: #ffffff;
-    width: 1080px;
-    padding: 10px;
+    width: var(--capture-width); /* ← 改這裡就好，offscreen-container 會一起動 */
+    padding: var(--capture-padding);
     margin: 0;
 }
 
@@ -311,7 +445,7 @@ button {
 /* 燈箱本體容器 */
 .modal-content {
     width: 90%;
-    max-width: 820px;
+    max-width: var(--modal-max-width); /* ← 燈箱寬度 */
     background: #f8fafc;
     border-radius: 16px;
     padding: 16px;
@@ -382,89 +516,116 @@ button {
     }
 
 /* =========================================
-   報價圖片表格（20px、深黑、欄寬重分配）
+   報價圖片表格（已套用 1~8 區控制面板）
    ========================================= */
 .modern-quote-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 28px; /* 🔄 全部統一 20px */
-    border: 2px solid #000000;
+    font-size: var(--table-base-font-size);
+    border: 2px solid var(--table-border-color);
     table-layout: fixed;
 }
 
     .modern-quote-table td {
-        border: 1px solid #000000;
-        padding: 8px 10px; /* 🔄 微調內距，配合欄寬 */
-        text-align: center;
+        border: 1px solid var(--table-border-color);
+        padding: var(--table-padding);
+        text-align: center; /* 預設內容置中 */
         vertical-align: middle;
         white-space: nowrap;
     }
 
-/* 🔄 左邊兩欄縮窄：22%+20%=42% → 15%+13%=28%，騰出 14% 給右邊 */
+/* 🔄 [區塊 1] 英文標籤 */
 .label-en {
-    color: #000000;
-    font-weight: 600;
-    text-align: left !important;
+    width: var(--z1-width) !important;
+    font-size: var(--z1-font-size);
+    color: var(--z1-color);
+    text-align: var(--z1-align) !important;
+    font-weight: var(--z1-weight);
     padding-left: 10px !important;
-    width: 20% !important; /* 🔄 22% → 15% */
 }
 
+/* 🔄 [區塊 2] 中文標籤（上半部：類型/天期...） */
 .modern-quote-table tbody:first-of-type tr td:nth-child(2) {
-    width: 16% !important; /* 🔄 20% → 13% */
+    width: var(--z2-width) !important;
 }
 
 .label-zh {
-    color: #000000;
-    font-weight: bold;
-    text-align: center;
-    padding-left: 0 !important; /* 🔄 歸零，讓文字真正置中 */
-    padding-right: 0 !important; /* 🔄 新增，確保兩側對稱 */
+    font-size: var(--z2-font-size);
+    color: var(--z2-color);
+    text-align: var(--z2-align) !important;
+    font-weight: var(--z2-weight);
+    padding-left: 0 !important;
+    padding-right: 0 !important;
 }
 
-.modern-quote-table .bottom-section .align-middle {
-    text-align: center !important;
-    padding-left: 10px !important;
-}
-
-/* 🔄 右邊四欄平均分配：72% / 4 = 18% each */
-.modern-quote-table .bottom-section td:nth-child(n+3) {
-    width: 16% !important;
-}
-
+/* 🔄 [區塊 3] 上半部紅字數值 */
 .value-highlight {
-    color: #dc2626; /* 紅色不變 */
-    font-weight: bold;
-    font-size: 28px; /* 🔄 統一 20px */
+    font-size: var(--z3-font-size);
+    color: var(--z3-color);
+    text-align: var(--z3-align) !important;
+    font-weight: var(--z3-weight);
     letter-spacing: 0.5px;
 }
 
+/* 🔄 [區塊 4] 發行機構 */
 .issuer-title {
-    color: #dc2626; /* 紅色不變 */
-    font-weight: bold;
-    font-size: 28px;
-    text-align: left !important;
+    font-size: var(--z4-font-size);
+    color: var(--z4-color);
+    text-align: var(--z4-align) !important;
+    font-weight: var(--z4-weight);
     padding-left: 10px !important;
 }
 
-.modern-quote-table .val-sub {
-    font-weight: bold;
-    color: #000000;
-    text-align: center !important; /* 🔄 強制置中 */
-    padding-left: 0 !important; /* 🔄 移除預設內距干擾 */
-    padding-right: 0 !important; /* 🔄 移除預設內距干擾 */
+/* 🔄 [區塊 5] 連結標的（左下大格）
+   欄寬由瀏覽器自動合計 z1-width + z2-width，不需另設 */
+.modern-quote-table .bottom-section .align-middle {
+    font-size: var(--z5-font-size);
+    color: var(--z5-color);
+    text-align: var(--z5-align) !important;
+    font-weight: var(--z5-weight);
+    padding-left: 10px !important;
 }
 
+/* 🔄 [區塊 6] 股票名稱 */
 .modern-quote-table .stock-name {
-    text-align: left !important;
+    font-size: var(--z6-font-size);
+    color: var(--z6-color);
+    text-align: var(--z6-align) !important;
+    font-weight: var(--z6-weight);
     padding-left: 10px !important;
-    color: #000000;
 }
 
+/* 🔄 [區塊 7] 底部表頭文字列（參考進場價/觸及生效價/預計執行價/提前出場價）
+   ★ 修正：原本錯接到 z2，現改由 z7 控制。
+      :not(.align-middle) 確保「連結標的」大格繼續由 z5 管轄。 */
+.modern-quote-table .bottom-section .label-zh:not(.align-middle) {
+    font-size: var(--z7-font-size);
+    color: var(--z7-color);
+    text-align: var(--z7-align) !important;
+    font-weight: var(--z7-weight);
+}
+
+/* 🔄 [區塊 7] 底部副標列（日期、百分比）*/
+.modern-quote-table .val-sub {
+    font-size: var(--z7-font-size);
+    color: var(--z7-color);
+    text-align: var(--z7-align) !important;
+    font-weight: var(--z7-weight);
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+/* 🔄 [區塊 8] 底部股價數字 */
 .modern-quote-table .num-val {
-    color: #000000;
-    font-weight: 600;
-    font-size: 28px;
-    text-align: center !important; /* 🔄 強制置中 */
-    padding-left: 0 !important; /* 🔄 移除預設內距干擾 */
-    padding-right: 0 !important; /* 🔄 移除預設內距干擾 */
+    font-size: var(--z8-font-size);
+    color: var(--z8-color);
+    text-align: var(--z8-align) !important;
+    font-weight: var(--z8-weight);
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+/* 右側四欄欄寬（區塊 3 / 7 / 8 共用實體欄）→ 由 --z-col-width 控制 */
+.modern-quote-table .bottom-section td:nth-child(n+3) {
+    width: var(--z-col-width) !important;
 }

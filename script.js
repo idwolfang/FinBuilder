@@ -337,3 +337,45 @@ window.addEventListener("DOMContentLoaded", () => {
         quoteDateInput.value = `${yyyy}-${mm}-${dd}`;
     }
 });
+
+// ── 自訂標的 ──
+document.getElementById("addCustomStock").addEventListener("click", () => {
+    const symbolInput = document.getElementById("customSymbol");
+    const nameInput = document.getElementById("customName");
+
+    const symbol = symbolInput.value.trim().toUpperCase();
+    const name = nameInput.value.trim();
+
+    if (!symbol || !name) {
+        alert("請同時填寫英文代號與中文名稱。");
+        return;
+    }
+
+    // 防止重複新增同一代號
+    const existing = document.querySelector(`input[name="stock"][value="${symbol}"]`);
+    if (existing) {
+        alert(`「${symbol}」已經存在於清單中。`);
+        return;
+    }
+
+    const list = document.getElementById("customStockList");
+    const label = document.createElement("label");
+    label.innerHTML = `
+        <input type="checkbox" name="stock" value="${symbol}" data-name="${name}" checked />
+        ${symbol} ${name}
+        <span class="custom-remove" title="移除">✕</span>
+    `;
+
+    // 點 ✕ 移除這筆自訂標的
+    label.querySelector(".custom-remove").addEventListener("click", (e) => {
+        e.preventDefault();
+        list.removeChild(label);
+    });
+
+    list.appendChild(label);
+
+    // 清空輸入欄，方便連續新增
+    symbolInput.value = "";
+    nameInput.value = "";
+    symbolInput.focus();
+});
