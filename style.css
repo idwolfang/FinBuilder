@@ -629,3 +629,9 @@ button {
 .modern-quote-table .bottom-section td:nth-child(n+3) {
     width: var(--z-col-width) !important;
 }
+
+/* 說明內信箱連結顏色 */
+.help a {
+    color: #1f3d73;
+    font-weight: 600;
+}
