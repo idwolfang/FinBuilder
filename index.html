@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FinBuilder</title>
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="final-doc.css" />
 </head>
 <body>
     <nav class="topbar">
@@ -12,11 +13,12 @@
         <a href="#" class="nav-disabled">總覽<span class="status-badge">尚未開放</span></a>
         <a href="#" class="nav-disabled">商品<span class="status-badge">尚未開放</span></a>
         <a href="#" class="nav-disabled">客戶<span class="status-badge">尚未開放</span></a>
-        <a class="active" href="#">報價</a>
+        <a class="active" href="#" data-section="quote">報價</a>
         <a href="#" class="nav-disabled">報告<span class="status-badge">尚未開放</span></a>
+        <a href="#" data-section="final-doc">最終文件<span class="status-badge">測試中</span></a>
     </nav>
 
-    <main class="layout">
+    <main class="layout" id="section-quote">
         <section class="panel">
             <h2>報價圖片產生器</h2>
 
@@ -230,6 +232,198 @@
         </aside>
     </main>
 
+    <main class="layout" id="section-final-doc" style="display:none">
+        <section class="panel">
+            <h2>最終文件產生器</h2>
+
+            <div class="form-grid">
+                <div class="field">
+                    <label>商品類型</label>
+                    <select id="fd-productType">
+                        <option value="DAC">DAC（區間配息）</option>
+                        <option value="FCN">FCN（固定配息）</option>
+                        <option value="STEPDOWN">FCN（固定配息）步階式出場</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label>SN 編號</label>
+                    <input id="fd-sn" type="text" placeholder="例：2026SN2228" maxlength="20" />
+                </div>
+
+                <div class="field">
+                    <label>天期 Tenor</label>
+                    <select id="fd-tenor">
+                        <option value="1M">1M</option>
+                        <option value="2M">2M</option>
+                        <option value="3M">3M</option>
+                        <option value="4M">4M</option>
+                        <option value="5M">5M</option>
+                        <option value="6M" selected>6M</option>
+                        <option value="7M">7M</option>
+                        <option value="8M">8M</option>
+                        <option value="9M">9M</option>
+                        <option value="10M">10M</option>
+                        <option value="11M">11M</option>
+                        <option value="12M">12M</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label>幣別</label>
+                    <select id="fd-currency">
+                        <option value="USD" selected>USD</option>
+                        <option value="HKD">HKD</option>
+                        <option value="JPY">JPY</option>
+                        <option value="CNH">CNH</option>
+                        <option value="EUR">EUR</option>
+                        <option value="AUD">AUD</option>
+                        <option value="ZAR">ZAR</option>
+                        <option value="GBP">GBP</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label>發行機構</label>
+                    <select id="fd-issuer">
+                        <option value="-" selected>-</option>
+                        <option value="Barclays">Barclays 巴克萊證券</option>
+                        <option value="BBVA">BBVA 西班牙對外銀行</option>
+                        <option value="BNP">BNP 法國巴黎銀行</option>
+                        <option value="CA">CA 東方匯理銀行</option>
+                        <option value="CITI">CITI 花旗集團</option>
+                        <option value="DBS">DBS 星展銀行</option>
+                        <option value="GS">GS 高盛國際</option>
+                        <option value="HSBC">HSBC 匯豐銀行</option>
+                        <option value="JPM">JPM 摩根大通</option>
+                        <option value="MS">MS 摩根士丹利</option>
+                        <option value="Natixis">Natixis 法國外貿銀行</option>
+                        <option value="Nomura">Nomura 野村證券</option>
+                        <option value="SG">SG 法國興業銀行</option>
+                        <option value="UBS">UBS 瑞士銀行</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label>Coupon % <span class="fd-hint">（年利率）</span></label>
+                    <input id="fd-coupon" type="number" inputmode="decimal" step="0.01" placeholder="例：17.17" />
+                </div>
+
+                <div class="field">
+                    <label>KO % <span class="fd-hint">（記憶式自動提前出場價）</span></label>
+                    <input id="fd-ko" type="number" inputmode="decimal" step="0.01" placeholder="例：96" />
+                </div>
+
+                <div class="field">
+                    <label>Strike % <span class="fd-hint">（執行價）</span></label>
+                    <input id="fd-strike" type="number" inputmode="decimal" step="0.01" placeholder="例：80" />
+                </div>
+
+                <div class="field">
+                    <label>EKI % <span class="fd-hint">（無則留空）</span></label>
+                    <input id="fd-eki" type="number" inputmode="decimal" step="0.01" placeholder="無則留空" />
+                </div>
+
+                <div class="field" id="fd-stepDownField" style="display:none">
+                    <label>每期遞減 % <span class="fd-hint">（步階式出場）</span></label>
+                    <input id="fd-stepDown" type="number" inputmode="decimal" step="0.01" placeholder="例：5" />
+                </div>
+            </div>
+
+            <h3 class="fd-section-title">重要日期</h3>
+            <div class="form-grid">
+                <div class="field">
+                    <label>交易日</label>
+                    <input id="fd-tradeDate" type="date" />
+                </div>
+                <div class="field">
+                    <label>發行日</label>
+                    <input id="fd-issueDate" type="date" />
+                </div>
+                <div class="field">
+                    <label>到期日</label>
+                    <input id="fd-maturityDate" type="date" />
+                </div>
+                <div class="field">
+                    <label>KO 開始日 <span class="fd-hint">（出場事件起）</span></label>
+                    <input id="fd-koStartDate" type="date" />
+                </div>
+                <div class="field">
+                    <label>期末評價日</label>
+                    <input id="fd-finalValDate" type="date" />
+                </div>
+            </div>
+
+            <h3 class="fd-section-title">上傳表格圖片</h3>
+            <div class="fd-uploads">
+                <div class="fd-upload-block">
+                    <p class="fd-upload-label">① 連結標的表格</p>
+                    <div class="fd-upload-zone" id="fd-zone-stock">
+                        <input type="file" id="fd-file-stock" accept="image/*" />
+                        <div class="fd-upload-ph">
+                            <span class="fd-upload-icon">⬆</span>
+                            <p>點擊上傳連結標的表格圖片</p>
+                            <p class="fd-upload-sub">支援 PNG、JPG</p>
+                        </div>
+                        <div class="fd-upload-prev" style="display:none">
+                            <img id="fd-img-stock" src="" alt="" />
+                            <p class="fd-upload-change">點擊更換圖片</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="fd-upload-block">
+                    <p class="fd-upload-label">② 觀察期間及配息交割日表</p>
+                    <div class="fd-upload-zone" id="fd-zone-schedule">
+                        <input type="file" id="fd-file-schedule" accept="image/*" />
+                        <div class="fd-upload-ph">
+                            <span class="fd-upload-icon">⬆</span>
+                            <p>點擊上傳日期排程表格圖片</p>
+                            <p class="fd-upload-sub">支援 PNG、JPG</p>
+                        </div>
+                        <div class="fd-upload-prev" style="display:none">
+                            <img id="fd-img-schedule" src="" alt="" />
+                            <p class="fd-upload-change">點擊更換圖片</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="fd-upload-block" id="fd-block-ko" style="display:none">
+                    <p class="fd-upload-label">③ KO 遞減時程表 <span class="fd-hint">（步階式出場專用）</span></p>
+                    <div class="fd-upload-zone" id="fd-zone-ko">
+                        <input type="file" id="fd-file-ko" accept="image/*" />
+                        <div class="fd-upload-ph">
+                            <span class="fd-upload-icon">⬆</span>
+                            <p>點擊上傳 KO 遞減時程表圖片</p>
+                            <p class="fd-upload-sub">支援 PNG、JPG</p>
+                        </div>
+                        <div class="fd-upload-prev" style="display:none">
+                            <img id="fd-img-ko" src="" alt="" />
+                            <p class="fd-upload-change">點擊更換圖片</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="fd-actions">
+                <button id="fd-downloadWord" type="button">⬇ 下載 Word</button>
+                <button id="fd-downloadPdf" type="button" class="fd-btn-secondary">⬇ 下載 PDF</button>
+            </div>
+        </section>
+
+        <aside class="help">
+            <h2>使用說明</h2>
+            <ol>
+                <li>選擇商品類型並填入 SN 編號、天期、發行機構等基本資訊</li>
+                <li>填入 Coupon、KO、Strike、EKI 等條件百分比</li>
+                <li>填入交易日、發行日、到期日、KO 開始日、期末評價日五個日期</li>
+                <li>上傳連結標的表格圖片（由 Excel 匯出截圖）</li>
+                <li>上傳觀察期間及配息交割日表格圖片</li>
+                <li>步階式出場另需上傳 KO 遞減時程表圖片</li>
+                <li>點擊「下載 Word」或「下載 PDF」取得最終文件</li>
+            </ol>
+        </aside>
+    </main>
 
     <footer class="site-footer">
         © 2026 cyfang｜All rights reserved．本工具由 cyfang 獨立開發，未經授權禁止商業使用。
@@ -248,6 +442,8 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html-docx-js/dist/html-docx.js"></script>
     <script src="script.js"></script>
+    <script src="final-doc.js"></script>
 </body>
 </html>

@@ -2,18 +2,90 @@
     box-sizing: border-box;
 }
 
-/* =========================================
-   報價表格 - 1~8區 視覺控制面板 (修改這裡即可)
-   =========================================
-   ⚠️ 欄寬連動說明（table-layout: fixed）：
-     表格共 6 欄，上下共用同一組實體欄位：
-       欄1 = z1-width（英文標籤）
-       欄2 = z2-width（中文標籤）
-       欄3~6 = z-col-width × 4（右側四欄）
-     三者相加必須等於 100%。
-     「連結標的」大格 = 欄1+欄2 寬度自動合計，不需另設。
-     「截圖容器」與「燈箱」也有各自變數可直接調整。
-   ========================================= */
+/* ╔══════════════════════════╗
+   ║           網站外觀控制台（修改這裡即可）           ║
+   ║  所有顏色、字體、尺寸集中在此，下方 CSS 自動連動   ║
+   ╚══════════════════════════╝ */
+:root {
+    /* ════════════════════════════════════════
+       【色彩系統】
+       ── 主色調（深藍系） ──
+         改 --color-dark 整個深色 nav/footer/標題列跟著換
+         改 --color-primary 按鈕、active連結、info文字跟著換
+       ════════════════════════════════════════ */
+    --color-dark: #101a2e; /* topbar / footer / panel標題列底色 */
+    --color-primary: #1f3d73; /* 按鈕、active nav、連結、status文字 */
+    --color-primary-hover: #28509a; /* 按鈕 hover（比 primary 亮一階） */
+    --color-primary-deep: #162c54; /* 下載按鈕 hover（比 primary 深一階） */
+    /* ── 文字色 ── */
+    --color-text: #0f1b33; /* 全站主文字 */
+    --color-text-mid: #17233d; /* label、小標題 */
+    --color-text-sub: #22365e; /* 股票分類標題 */
+    --color-text-muted: #576785; /* nav-disabled、次要說明 */
+    --color-text-faint: #7a8ea3; /* footer、status-badge、icon */
+    --color-text-ghost: #94a3b8; /* ✕ 移除符號 */
+    --color-nav-link: #d9e4f5; /* topbar 連結文字 */
+    /* ── 背景色 ── */
+    --color-bg-page: #f1f4f8; /* body 背景 */
+    --color-bg-modal: #f8fafc; /* 燈箱背景 */
+    /* ── 邊框色 ── */
+    --color-border-panel: #d7dde8; /* panel / help 外框 */
+    --color-border-input: #cbd3df; /* 表單欄位邊框 */
+    --color-border-close: #cbd5e1; /* 關閉按鈕邊框 */
+    --color-border-img: #e2e8f0; /* 圖片容器邊框 */
+    /* ── 特殊色 ── */
+    --color-accent-red: #dc2626; /* 表格強調紅字、✕ hover */
+    /* ════════════════════════════════════════
+       【字體】
+       ════════════════════════════════════════ */
+    --font-family: "Microsoft JhengHei", Arial, sans-serif;
+    --font-size-ui: 14px; /* 表單、說明、一般 UI 文字 */
+    --font-size-sm: 13px; /* footer、RWD小螢幕 nav */
+    --font-size-xs: 12px; /* ✕ 移除符號 */
+    --font-size-nav-brand: 18px; /* topbar 品牌名稱 */
+    --font-size-panel-h2: 16px; /* panel / help 標題列 */
+    --font-size-section-h3: 15px; /* 連結標的 h3 */
+    --font-size-stock-h4: 14px; /* 半導體 / 科技 分類小標 */
+    /* ════════════════════════════════════════
+       【圓角】
+       ════════════════════════════════════════ */
+    --radius-panel: 8px; /* panel / help 卡片圓角 */
+    --radius-input: 6px; /* 表單欄位、按鈕 */
+    --radius-modal: 16px; /* 燈箱圓角 */
+    --radius-modal-btn: 21px; /* 燈箱按鈕膠囊圓角 */
+    --radius-badge: 4px; /* status-badge、nav active */
+    /* ════════════════════════════════════════
+       【間距與尺寸】
+       ════════════════════════════════════════ */
+    --height-topbar: 48px; /* 導覽列高度 */
+    --height-input: 36px; /* 表單欄位、一般按鈕高度 */
+    --height-modal-btn: 42px; /* 燈箱按鈕高度 */
+
+    --padding-layout: 24px; /* 主版面邊距 */
+    --padding-panel-h2: 14px 18px; /* panel 標題列內距 */
+    --height-panel-h2: 46px; /* 新增：固定標題列高度 */
+    --padding-input: 0 12px; /* 表單欄位內距 */
+    --padding-section: 4px 18px 0; /* underlyings 區塊內距 */
+    /* ════════════════════════════════════════
+       【陰影】
+       ════════════════════════════════════════ */
+    --shadow-panel: 0 2px 8px rgba(15, 27, 51, 0.08); /* 卡片陰影 */
+    --shadow-modal: 0 20px 40px rgba(0, 0, 0, 0.4); /* 燈箱陰影 */
+    --shadow-btn: 0 4px 12px rgba(31, 61, 115, 0.15); /* 燈箱按鈕陰影 */
+}
+
+/* ╔═════════════════════════════════════════════════════════╗
+   ║       報價圖片表格 - 1~8區 視覺控制台（修改這裡即可）         ║
+   ║                                                         ║
+   ║  ⚠️ 欄寬連動說明（table-layout: fixed）：                  ║
+   ║    表格共 6 欄，上下共用同一組實體欄位：                     ║
+   ║      欄1 = z1-width（英文標籤）                           ║
+   ║      欄2 = z2-width（中文標籤）                           ║
+   ║      欄3~6 = z-col-width × 4（右側四欄）                  ║
+   ║    三者相加必須等於 100%。                                  ║
+   ║    「連結標的」大格 = 欄1+欄2 寬度自動合計，不需另設。         ║
+   ║    「截圖容器」與「燈箱」也有各自變數可直接調整。              ║
+   ╚═════════════════════════════════════════════════════════╝ */
 :root {
     /* ── 全域表格設定 ── */
     --table-padding: 8px 10px; /* 儲存格內距（上下 左右） */
@@ -92,35 +164,35 @@
 
 body {
     margin: 0;
-    font-family: "Microsoft JhengHei", Arial, sans-serif;
-    background: #f1f4f8;
-    color: #0f1b33;
+    font-family: var(--font-family);
+    background: var(--color-bg-page);
+    color: var(--color-text);
 }
 
 /* =========================================
    導覽列優化
    ========================================= */
 .topbar {
-    height: 46px;
-    background: #101a2e;
+    height: var(--height-topbar);
+    background: var(--color-dark);
     display: flex;
     align-items: center;
     gap: 20px;
-    padding: 0 24px;
+    padding: 0 var(--padding-layout);
 }
 
 .brand {
     color: white;
     font-weight: 700;
-    font-size: 18px;
+    font-size: var(--font-size-nav-brand);
     margin-right: 16px;
     white-space: nowrap;
 }
 
 .topbar a {
-    color: #d9e4f5;
+    color: var(--color-nav-link);
     text-decoration: none;
-    font-size: 14px;
+    font-size: var(--font-size-ui);
     padding: 13px 12px;
     white-space: nowrap;
     display: flex;
@@ -129,22 +201,22 @@ body {
 }
 
     .topbar a.active {
-        background: #1f3d73;
+        background: var(--color-primary);
         color: white;
-        border-radius: 4px;
+        border-radius: var(--radius-badge);
     }
 
     .topbar a.nav-disabled {
-        color: #576785;
+        color: var(--color-text-muted);
         pointer-events: none;
     }
 
 .status-badge {
     font-size: 10px;
     background: rgba(255, 255, 255, 0.08);
-    color: #7a8ea3;
+    color: var(--color-text-faint);
     padding: 1px 5px;
-    border-radius: 4px;
+    border-radius: var(--radius-badge);
     font-weight: normal;
 }
 
@@ -154,24 +226,28 @@ body {
 .layout {
     display: grid;
     grid-template-columns: minmax(0, 1.4fr) minmax(320px, 0.9fr);
-    gap: 24px;
-    padding: 24px;
+    gap: var(--padding-layout);
+    padding: var(--padding-layout);
 }
 
 .panel, .help {
     background: white;
-    border: 1px solid #d7dde8;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(15, 27, 51, 0.08);
+    border: 1px solid var(--color-border-panel);
+    border-radius: var(--radius-panel);
+    box-shadow: var(--shadow-panel);
 }
 
     .panel h2, .help h2 {
         margin: 0;
-        padding: 14px 18px;
-        background: #101a2e;
+        padding: var(--padding-panel-h2);
+        height: var(--height-panel-h2);
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        background: var(--color-dark);
         color: white;
-        font-size: 16px;
-        border-radius: 8px 8px 0 0;
+        font-size: var(--font-size-panel-h2);
+        border-radius: var(--radius-panel) var(--radius-panel) 0 0;
     }
 
 .panel {
@@ -186,42 +262,42 @@ body {
         .panel .date-wrapper label {
             display: block;
             margin: 18px 0 8px;
-            font-size: 14px;
+            font-size: var(--font-size-ui);
         }
 
         .panel .date-wrapper input#quoteDate {
             -webkit-appearance: none !important;
             appearance: none !important;
             background-color: #ffffff !important;
-            color: #0f1b33 !important;
+            color: var(--color-text) !important;
             width: 100% !important;
             max-width: 100% !important;
             margin: 0 !important;
             box-sizing: border-box !important;
-            height: 36px !important;
-            line-height: 36px !important;
+            height: var(--height-input) !important;
+            line-height: var(--height-input) !important;
             text-align: center !important;
-            border: 1px solid #cbd3df;
-            border-radius: 6px;
-            padding: 0 12px;
-            font-size: 14px;
+            border: 1px solid var(--color-border-input);
+            border-radius: var(--radius-input);
+            padding: var(--padding-input);
+            font-size: var(--font-size-ui);
             display: block !important;
         }
 
 button {
     margin: 22px 18px 0;
-    height: 38px;
+    height: var(--height-input);
     padding: 0 18px;
     border: 0;
-    border-radius: 6px;
-    background: #1f3d73;
+    border-radius: var(--radius-input);
+    background: var(--color-primary);
     color: white;
     font-weight: 600;
     cursor: pointer;
 }
 
     button:hover {
-        background: #28509a;
+        background: var(--color-primary-hover);
     }
 
 .help {
@@ -232,7 +308,7 @@ button {
         margin: 16px 24px;
         padding-left: 18px;
         line-height: 1.8;
-        font-size: 14px;
+        font-size: var(--font-size-ui);
     }
 
 .form-grid {
@@ -245,30 +321,30 @@ button {
 .field label {
     display: block;
     margin: 0 0 8px;
-    font-size: 14px;
-    color: #17233d;
+    font-size: var(--font-size-ui);
+    color: var(--color-text-mid);
 }
 
 .field select, .field input {
     width: 100%;
-    height: 36px;
+    height: var(--height-input);
     margin: 0;
-    border: 1px solid #cbd3df;
-    border-radius: 6px;
-    padding: 0 12px;
+    border: 1px solid var(--color-border-input);
+    border-radius: var(--radius-input);
+    padding: var(--padding-input);
     background: white;
-    color: #0f1b33;
-    font-size: 14px;
+    color: var(--color-text);
+    font-size: var(--font-size-ui);
 }
 
 .underlyings {
-    padding: 4px 18px 0;
+    padding: var(--padding-section);
 }
 
     .underlyings h3 {
         margin: 12px 0 14px;
-        font-size: 15px;
-        color: #17233d;
+        font-size: var(--font-size-section-h3);
+        color: var(--color-text-mid);
     }
 
 .stock-columns {
@@ -279,9 +355,9 @@ button {
 
     .stock-columns h4 {
         margin: 0 0 8px;
-        font-size: 14px;
+        font-size: var(--font-size-stock-h4);
         font-weight: 600;
-        color: #22365e;
+        color: var(--color-text-sub);
     }
 
     .stock-columns label {
@@ -289,7 +365,7 @@ button {
         align-items: center;
         gap: 8px;
         margin: 8px 0;
-        font-size: 14px;
+        font-size: var(--font-size-ui);
         line-height: 1.25;
     }
 
@@ -308,35 +384,35 @@ button {
 }
 
     .custom-stock-add input {
-        height: 36px;
-        border: 1px solid #cbd3df;
-        border-radius: 6px;
-        padding: 0 12px;
-        font-size: 14px;
-        color: #0f1b33;
+        height: var(--height-input);
+        border: 1px solid var(--color-border-input);
+        border-radius: var(--radius-input);
+        padding: var(--padding-input);
+        font-size: var(--font-size-ui);
+        color: var(--color-text);
         width: 180px;
     }
 
     .custom-stock-add button {
         margin: 0;
-        height: 36px;
+        height: var(--height-input);
         white-space: nowrap;
     }
 
 .custom-remove {
     margin-left: 4px;
-    color: #94a3b8;
+    color: var(--color-text-ghost);
     cursor: pointer;
-    font-size: 12px;
+    font-size: var(--font-size-xs);
 }
 
     .custom-remove:hover {
-        color: #dc2626;
+        color: var(--color-accent-red);
     }
 
 #priceStatus {
     margin: 14px 18px 0;
-    color: #183d7a;
+    color: var(--color-primary);
     font-weight: 600;
 }
 
@@ -344,11 +420,11 @@ button {
    頁尾版權聲明
    ========================================= */
 .site-footer {
-    background: #101a2e;
-    color: #7a8ea3;
+    background: var(--color-dark);
+    color: var(--color-text-faint);
     text-align: center;
-    font-size: 13px;
-    padding: 14px 24px;
+    font-size: var(--font-size-sm);
+    padding: 14px var(--padding-layout);
     letter-spacing: 0.3px;
     line-height: 1.6;
 }
@@ -377,7 +453,7 @@ button {
 
     .topbar {
         height: auto;
-        min-height: 46px;
+        min-height: var(--height-topbar);
         flex-wrap: nowrap;
         overflow-x: auto;
         padding: 0 16px;
@@ -387,7 +463,7 @@ button {
 
         .topbar a {
             padding: 12px 8px;
-            font-size: 13px;
+            font-size: var(--font-size-sm);
         }
 }
 
@@ -445,11 +521,11 @@ button {
 /* 燈箱本體容器 */
 .modal-content {
     width: 90%;
-    max-width: var(--modal-max-width); /* ← 燈箱寬度 */
-    background: #f8fafc;
-    border-radius: 16px;
+    max-width: var(--modal-max-width);
+    background: var(--color-bg-modal);
+    border-radius: var(--radius-modal);
     padding: 16px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    box-shadow: var(--shadow-modal);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -458,8 +534,8 @@ button {
 .img-scroll-container {
     width: 100%;
     overflow-x: auto;
-    border-radius: 8px;
-    border: 1px solid #e2e8f0;
+    border-radius: var(--radius-input);
+    border: 1px solid var(--color-border-img);
     background: white;
 }
 
@@ -480,14 +556,14 @@ button {
     .modal-actions button {
         flex: 1;
         margin: 0;
-        height: 42px;
-        border-radius: 21px;
-        font-size: 14px;
+        height: var(--height-modal-btn);
+        border-radius: var(--radius-modal-btn);
+        font-size: var(--font-size-ui);
         font-weight: 600;
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 4px 12px rgba(31, 61, 115, 0.15);
+        box-shadow: var(--shadow-btn);
         transition: transform 0.1s ease, background 0.2s ease;
     }
 
@@ -496,23 +572,23 @@ button {
         }
 
 #downloadModal {
-    background: #1f3d73;
+    background: var(--color-primary);
     color: white;
 }
 
     #downloadModal:hover {
-        background: #162c54;
+        background: var(--color-primary-deep);
     }
 
 .btn-close {
-    background: #e2e8f0;
-    color: #475569;
-    border: 1px solid #cbd5e1;
+    background: var(--color-border-img);
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border-close);
     box-shadow: none !important;
 }
 
     .btn-close:hover {
-        background: #cbd5e1;
+        background: var(--color-border-close);
     }
 
 /* =========================================
@@ -632,6 +708,6 @@ button {
 
 /* 說明內信箱連結顏色 */
 .help a {
-    color: #1f3d73;
+    color: var(--color-primary);
     font-weight: 600;
 }

@@ -1,0 +1,155 @@
+﻿/* ============================================================
+   final-doc.css  —  最終文件產生器 專用樣式
+   繼承 style.css 的 CSS variables，不重複宣告
+   ============================================================ */
+
+/* ---------- 輔助提示文字 ---------- */
+.fd-hint {
+    font-size: 11px;
+    color: var(--color-text-sub, #6b7280);
+    font-weight: 400;
+}
+
+/* ---------- 段落小標題 ---------- */
+.fd-section-title {
+    font-size: var(--font-size-section-h3, 14px);
+    color: var(--color-text, #111827);
+    font-weight: 600;
+    margin: 20px 0 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--color-border-input, #d1d5db);
+}
+
+/* ---------- 上傳區塊群（垂直排列） ---------- */
+.fd-uploads {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 4px;
+}
+
+.fd-upload-label {
+    font-size: var(--font-size-ui, 14px);
+    color: var(--color-text-mid, #374151);
+    font-weight: 600;
+    margin: 0 0 6px;
+}
+
+/* ---------- 上傳區域（虛線框） ---------- */
+.fd-upload-zone {
+    position: relative;
+    border: 2px dashed var(--color-border-input, #d1d5db);
+    border-radius: var(--radius-input, 6px);
+    padding: 32px 20px;
+    text-align: center;
+    cursor: pointer;
+    background: #fafbfc;
+    transition: border-color 0.18s ease, background 0.18s ease;
+    overflow: hidden;
+    min-height: 90px;
+}
+
+    .fd-upload-zone:hover {
+        border-color: var(--color-primary, #2563eb);
+        background: #f0f6ff;
+    }
+
+    /* 原生 file input 鋪滿整個 zone，透明疊在最上層 */
+    .fd-upload-zone input[type="file"] {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+        z-index: 2;
+    }
+
+/* ---------- 尚未上傳時的 placeholder ---------- */
+.fd-upload-ph {
+    pointer-events: none;
+    user-select: none;
+}
+
+.fd-upload-icon {
+    display: block;
+    font-size: 26px;
+    color: var(--color-text-sub, #6b7280);
+    margin-bottom: 6px;
+}
+
+.fd-upload-ph p {
+    margin: 4px 0 0;
+    font-size: var(--font-size-ui, 14px);
+    color: var(--color-text-mid, #374151);
+}
+
+.fd-upload-sub {
+    font-size: 11px;
+    color: var(--color-text-muted, #9ca3af);
+    margin-top: 2px !important;
+}
+
+/* ---------- 已上傳後的預覽 ---------- */
+.fd-upload-prev img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 4px;
+    pointer-events: none;
+}
+
+.fd-upload-change {
+    font-size: 11px;
+    color: var(--color-primary, #2563eb);
+    margin: 6px 0 0;
+}
+
+/* 上傳後 zone 切換為實線框、白底 */
+.fd-upload-zone.has-image {
+    padding: 10px;
+    border-style: solid;
+    border-color: var(--color-primary, #2563eb);
+    background: #fff;
+}
+
+    .fd-upload-zone.has-image .fd-upload-ph {
+        display: none;
+    }
+
+/* ---------- 產生按鈕列 ---------- */
+.fd-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+}
+
+    .fd-actions button {
+        flex: 1;
+        min-width: 150px;
+        height: var(--height-modal-btn, 40px);
+        border-radius: var(--radius-modal-btn, 6px);
+        font-size: var(--font-size-ui, 14px);
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+        background: var(--color-primary, #2563eb);
+        color: #fff;
+        box-shadow: var(--shadow-btn, none);
+        transition: background 0.15s ease;
+    }
+
+        .fd-actions button:hover {
+            background: var(--color-primary-hover, #1d4ed8);
+        }
+
+    .fd-actions .fd-btn-secondary {
+        background: #fff;
+        color: var(--color-primary, #2563eb);
+        border: 1.5px solid var(--color-primary, #2563eb);
+    }
+
+        .fd-actions .fd-btn-secondary:hover {
+            background: #f0f6ff;
+        }
