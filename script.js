@@ -144,13 +144,15 @@ async function fetchPricesForStocks(stocks) {
         return null;
     }
 
-    const results = [];
     try {
-        for (const stock of stocks) {
-            priceStatus.textContent = `正在抓取 ${stock.symbol} 前一交易日收盤價...`;
-            const price = await getPreviousClosePrice(stock.symbol, quoteDate);
-            results.push({ ...stock, ...price });
-        }
+        priceStatus.textContent = `正在抓取 ${stocks.length} 檔標的前一交易日收盤價...`;
+
+        const results = await Promise.all(
+            stocks.map(async (stock) => {
+                const price = await getPreviousClosePrice(stock.symbol, quoteDate);
+                return { ...stock, ...price };
+            })
+        );
 
         priceStatus.textContent = results
             .map(item => `${item.symbol} 參考進場價：${item.close}`)
