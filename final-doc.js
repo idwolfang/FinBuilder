@@ -1,26 +1,43 @@
 /* ================================================================
    final-doc.js  —  最終文件產生器
-   依賴：docx CDN、jsPDF CDN、html2canvas CDN（已於 index.html 載入）
+   依賴：html-docx-js CDN、html2canvas CDN（已於 index.html 載入）
    ================================================================ */
+
+var FD_STYLE = {
+    bodyPt: 12,    // body 文字大小（pt）
+    h2Pt: 14,    // 標題大小（pt）
+    marginVCm: 1.5,  // 上下邊界（cm）
+    marginHCm: 1.5,  // 左右邊界（cm）
+};
+FD_STYLE._bodyPx = Math.round(FD_STYLE.bodyPt * 1.333);
+FD_STYLE._h2Px = Math.round(FD_STYLE.h2Pt * 1.333);
+FD_STYLE._marginVPx = Math.round(FD_STYLE.marginVCm / 2.54 * 96);
+FD_STYLE._marginHPx = Math.round(FD_STYLE.marginHCm / 2.54 * 96);
+FD_STYLE._marginVTwips = Math.round(FD_STYLE.marginVCm * 567);
+FD_STYLE._marginHTwips = Math.round(FD_STYLE.marginHCm * 567);
 
 // ----------------------------------------------------------------
 // 一、頁面切換（報價 ⇆ 最終文件）
 // ----------------------------------------------------------------
 (function initNavSwitching() {
-    const sectionMap = {
+    var sectionMap = {
         'quote': document.getElementById('section-quote'),
         'final-doc': document.getElementById('section-final-doc'),
     };
 
-    document.querySelectorAll('.topbar a[data-section]').forEach(link => {
-        link.addEventListener('click', e => {
+    document.querySelectorAll('.topbar a[data-section]').forEach(function (link) {
+        link.addEventListener('click', function (e) {
             e.preventDefault();
-            const target = link.dataset.section;
+            var target = link.dataset.section;
 
-            Object.values(sectionMap).forEach(el => { if (el) el.style.display = 'none'; });
+            Object.values(sectionMap).forEach(function (el) {
+                if (el) el.style.display = 'none';
+            });
             if (sectionMap[target]) sectionMap[target].style.display = '';
 
-            document.querySelectorAll('.topbar a').forEach(a => a.classList.remove('active'));
+            document.querySelectorAll('.topbar a').forEach(function (a) {
+                a.classList.remove('active');
+            });
             link.classList.add('active');
         });
     });
@@ -29,12 +46,12 @@
 // ----------------------------------------------------------------
 // 二、商品類型連動（STEPDOWN 專用欄位顯隱）
 // ----------------------------------------------------------------
-const fdProductType = document.getElementById('fd-productType');
+var fdProductType = document.getElementById('fd-productType');
 if (fdProductType) {
     fdProductType.addEventListener('change', function () {
-        const isStepdown = (this.value === 'STEPDOWN');
-        const stepField = document.getElementById('fd-stepDownField');
-        const koBlock = document.getElementById('fd-block-ko');
+        var isStepdown = (this.value === 'STEPDOWN');
+        var stepField = document.getElementById('fd-stepDownField');
+        var koBlock = document.getElementById('fd-block-ko');
         if (stepField) stepField.style.display = isStepdown ? 'block' : 'none';
         if (koBlock) koBlock.style.display = isStepdown ? 'block' : 'none';
     });
@@ -43,17 +60,78 @@ if (fdProductType) {
 // ----------------------------------------------------------------
 // 三、圖片上傳預覽
 // ----------------------------------------------------------------
+
+// ① ② 多張圖片暫存陣列
+var fdImageStore = { stock: [], schedule: [] };
+
+// ① ② 多張上傳（按上傳順序排列）
+function initMultiUploadZone(zoneId, fileInputId, imgListId, storeKey) {
+    var zone = document.getElementById(zoneId);
+    var fileInput = document.getElementById(fileInputId);
+    var imgList = document.getElementById(imgListId);
+    if (!zone || !fileInput || !imgList) return;
+
+    fileInput.addEventListener('change', function (e) {
+        var files = Array.from(e.target.files);
+        if (!files.length) return;
+
+        files.forEach(function (file) {
+            var reader = new FileReader();
+            reader.onload = function (ev) {
+                fdImageStore[storeKey].push(ev.target.result);
+
+                var wrapper = document.createElement('div');
+                wrapper.className = 'fd-img-item';
+
+                var img = document.createElement('img');
+                img.src = ev.target.result;
+
+                var removeBtn = document.createElement('button');
+                removeBtn.type = 'button';
+                removeBtn.className = 'fd-img-remove';
+                removeBtn.textContent = '✕';
+                removeBtn.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    var allItems = Array.from(imgList.querySelectorAll('.fd-img-item'));
+                    var idx = allItems.indexOf(wrapper);
+                    if (idx !== -1) {
+                        fdImageStore[storeKey].splice(idx, 1);
+                        imgList.removeChild(wrapper);
+                    }
+                    if (fdImageStore[storeKey].length === 0) {
+                        zone.querySelector('.fd-upload-ph').style.display = '';
+                        zone.querySelector('.fd-upload-prev').style.display = 'none';
+                        zone.classList.remove('has-image');
+                    }
+                });
+
+                wrapper.appendChild(img);
+                wrapper.appendChild(removeBtn);
+                imgList.appendChild(wrapper);
+
+                zone.querySelector('.fd-upload-ph').style.display = 'none';
+                zone.querySelector('.fd-upload-prev').style.display = 'block';
+                zone.classList.add('has-image');
+            };
+            reader.readAsDataURL(file);
+        });
+        fileInput.value = ''; // 重置，允許重複選同一檔案
+    });
+}
+
+// ③ 單張上傳（KO 遞減時程表，只需一張）
 function initUploadZone(zoneId, fileInputId, imgId) {
-    const zone = document.getElementById(zoneId);
-    const fileInput = document.getElementById(fileInputId);
-    const img = document.getElementById(imgId);
+    var zone = document.getElementById(zoneId);
+    var fileInput = document.getElementById(fileInputId);
+    var img = document.getElementById(imgId);
     if (!zone || !fileInput || !img) return;
 
-    fileInput.addEventListener('change', e => {
-        const file = e.target.files[0];
+    fileInput.addEventListener('change', function (e) {
+        var file = e.target.files[0];
         if (!file) return;
-        const reader = new FileReader();
-        reader.onload = ev => {
+        var reader = new FileReader();
+        reader.onload = function (ev) {
             img.src = ev.target.result;
             zone.querySelector('.fd-upload-ph').style.display = 'none';
             zone.querySelector('.fd-upload-prev').style.display = 'block';
@@ -63,14 +141,15 @@ function initUploadZone(zoneId, fileInputId, imgId) {
     });
 }
 
-initUploadZone('fd-zone-stock', 'fd-file-stock', 'fd-img-stock');
-initUploadZone('fd-zone-schedule', 'fd-file-schedule', 'fd-img-schedule');
+initMultiUploadZone('fd-zone-stock', 'fd-file-stock', 'fd-img-list-stock', 'stock');
+initMultiUploadZone('fd-zone-schedule', 'fd-file-schedule', 'fd-img-list-schedule', 'schedule');
 initUploadZone('fd-zone-ko', 'fd-file-ko', 'fd-img-ko');
 
 // ----------------------------------------------------------------
 // 四、取得並驗證表單資料
 // ----------------------------------------------------------------
 function getFdFormData() {
+    var stepDownEl = document.getElementById('fd-stepDown');
     return {
         productType: document.getElementById('fd-productType').value,
         sn: document.getElementById('fd-sn').value.trim(),
@@ -81,14 +160,14 @@ function getFdFormData() {
         ko: document.getElementById('fd-ko').value,
         strike: document.getElementById('fd-strike').value,
         eki: document.getElementById('fd-eki').value,
-        stepDown: document.getElementById('fd-stepDown')?.value || '',
+        stepDown: stepDownEl ? stepDownEl.value : '',
         tradeDate: document.getElementById('fd-tradeDate').value,
         issueDate: document.getElementById('fd-issueDate').value,
         maturityDate: document.getElementById('fd-maturityDate').value,
         koStartDate: document.getElementById('fd-koStartDate').value,
         finalValDate: document.getElementById('fd-finalValDate').value,
-        imgStock: document.getElementById('fd-img-stock').src,
-        imgSchedule: document.getElementById('fd-img-schedule').src,
+        imgStockList: fdImageStore.stock,
+        imgScheduleList: fdImageStore.schedule,
         imgKo: document.getElementById('fd-img-ko').src,
     };
 }
@@ -103,13 +182,19 @@ function validateFdForm(data) {
     if (!data.maturityDate) return '請填寫到期日';
     if (!data.koStartDate) return '請填寫 KO 開始日';
     if (!data.finalValDate) return '請填寫期末評價日';
-    if (!document.getElementById('fd-zone-stock')?.classList.contains('has-image'))
+
+    var zoneStock = document.getElementById('fd-zone-stock');
+    var zoneSchedule = document.getElementById('fd-zone-schedule');
+    var zoneKo = document.getElementById('fd-zone-ko');
+
+    if (!zoneStock || !zoneStock.classList.contains('has-image'))
         return '請上傳連結標的表格圖片';
-    if (!document.getElementById('fd-zone-schedule')?.classList.contains('has-image'))
+    if (!zoneSchedule || !zoneSchedule.classList.contains('has-image'))
         return '請上傳觀察期間及配息交割日表格圖片';
     if (data.productType === 'STEPDOWN' &&
-        !document.getElementById('fd-zone-ko')?.classList.contains('has-image'))
+        (!zoneKo || !zoneKo.classList.contains('has-image')))
         return '步階式出場商品請上傳 KO 遞減時程表圖片';
+
     return null;
 }
 
@@ -118,17 +203,18 @@ function validateFdForm(data) {
 // ----------------------------------------------------------------
 function formatDate(dateStr) {
     if (!dateStr) return '';
-    const [yyyy, mm, dd] = dateStr.split('-');
-    return `${yyyy} 年 ${parseInt(mm)} 月 ${parseInt(dd)} 日`;
+    var parts = dateStr.split('-');
+    return parts[0] + ' 年 ' + parseInt(parts[1]) + ' 月 ' + parseInt(parts[2]) + ' 日';
 }
 
 function buildTitle(data) {
-    const prefixMap = { DAC: '(區間)', FCN: '(固定)', STEPDOWN: '(Stepdown固定)' };
-    const typeMap = { DAC: '區間配息', FCN: '固定配息', STEPDOWN: '固定配息' };
-    const prefix = prefixMap[data.productType] || '';
-    const typeName = typeMap[data.productType] || '';
-    const issuerName = data.issuer !== '-' ? data.issuer : '';
-    return `${prefix}${data.sn}  最終商品文件 ${data.tenor}${typeName}  <${issuerName} ${data.coupon}%>`;
+    var prefixMap = { DAC: '（區間）', FCN: '（固定）', STEPDOWN: '（Stepdown固定）' };
+    var typeMap = { DAC: '區間配息', FCN: '固定配息', STEPDOWN: '固定配息' };
+    var prefix = prefixMap[data.productType] || '';
+    var typeName = typeMap[data.productType] || '';
+    var issuerName = data.issuer !== '-' ? data.issuer : '';
+    return prefix + data.sn + '  最終商品文件 ' + data.tenor + typeName +
+        '  <' + issuerName + ' ' + data.coupon + '%>';
 }
 
 function escHtml(str) {
@@ -136,16 +222,13 @@ function escHtml(str) {
 }
 
 function triggerDownload(blob, filename) {
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
+    var url = URL.createObjectURL(blob);
+    var link = document.createElement('a');
     link.href = url;
     link.download = filename;
     link.click();
-    setTimeout(() => URL.revokeObjectURL(url), 3000);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 3000);
 }
-
-// （已移除 dataUrlToArrayBuffer 與 getImageDimensions，不再需要）
-
 
 // ----------------------------------------------------------------
 // 六、Word 產生（html-docx-js）
@@ -156,136 +239,133 @@ async function generateWord(data) {
         return;
     }
 
-    const content = buildDocumentHtml(data);
-    const fullHtml = `<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8" />
-    <style>
-        body {
-            font-family: "微軟正黑體", "Microsoft JhengHei", sans-serif;
-            font-size: 12pt;
-            line-height: 1.7;
-            color: #111;
-        }
-        h2  { font-size: 13pt; font-weight: bold; margin: 0 0 8pt; }
-        p   { margin: 3pt 0; }
-        img { max-width: 170mm; display: block; margin: 6pt 0; }
-    </style>
-</head>
-<body>${content}</body>
-</html>`;
+    var content = buildDocumentHtml(data);
+    var fullHtml = '<!DOCTYPE html><html><head><meta charset="UTF-8"><style>' +
+        'body{font-family:"微軟正黑體","Microsoft JhengHei",sans-serif;' +
+        'font-size:' + FD_STYLE.bodyPt + 'pt;line-height:1.7;color:#111;}' +
+        'h2{font-size:' + FD_STYLE.h2Pt + 'pt;font-weight:bold;margin:0 0 8pt;}' +
+        'p{margin:3pt 0;}' +
+        'img{max-width:170mm;display:inline-block;}' +
+        '</style></head><body>' + content + '</body></html>';
 
-    // 1134 twips ≈ 20mm（A4 標準邊距）
-    const blob = htmlDocx.asBlob(fullHtml, {
+    var blob = htmlDocx.asBlob(fullHtml, {
         orientation: 'portrait',
-        margins: { top: 1134, right: 1134, bottom: 1134, left: 1134 },
+        margins: { top: FD_STYLE._marginVTwips, right: FD_STYLE._marginHTwips, bottom: FD_STYLE._marginVTwips, left: FD_STYLE._marginHTwips }
     });
 
-    triggerDownload(blob, `${data.sn}_最終商品文件.docx`);
+    triggerDownload(blob, data.sn + '_最終商品文件.docx');
 }
 
 // ----------------------------------------------------------------
-// 七、PDF 產生（window.print 列印預覽）
+// 七、PNG 圖片產生（html2canvas，與 Word 相同內容來源）
+// 注意：在本機 file:// 環境下會有安全限制，請改用 Live Server 測試
+// 部署到 GitHub Pages（https://）後完全正常
 // ----------------------------------------------------------------
-async function generatePdf(data) {
-    const content = buildDocumentHtml(data);
-    const printWin = window.open('', '_blank', 'width=860,height=800');
+async function generateImage(data) {
+    var content = buildDocumentHtml(data);
 
-    if (!printWin) {
-        alert('請允許瀏覽器彈出視窗（popup），才能開啟列印預覽。');
-        return;
+    var container = document.createElement('div');
+    container.style.cssText = 'position:fixed;left:-9999px;top:0;width:794px;background:#fff;box-sizing:border-box;';
+
+    var styleEl = document.createElement('style');
+    styleEl.textContent =
+        '.fd-ci{padding:' + FD_STYLE._marginVPx + 'px ' + FD_STYLE._marginHPx + 'px;width:794px;box-sizing:border-box;' +
+        'font-family:"微軟正黑體","Microsoft JhengHei",sans-serif;' +
+        'font-size:' + FD_STYLE._bodyPx + 'px;line-height:1.7;color:#111;}' +
+        '.fd-ci h2{font-size:' + FD_STYLE._h2Px + 'px;font-weight:bold;margin:0 0 11px;}' +
+        '.fd-ci p{margin:4px 0;}' +
+        '.fd-ci img{max-width:100%;display:block;margin:8px 0;}';
+    container.appendChild(styleEl);
+
+    var inner = document.createElement('div');
+    inner.className = 'fd-ci';
+    inner.innerHTML = content;
+    container.appendChild(inner);
+    document.body.appendChild(container);
+
+    try {
+        var canvas = await html2canvas(container, {
+            backgroundColor: '#ffffff',
+            scale: 2,
+            useCORS: true,
+            allowTaint: true,
+        });
+        var link = document.createElement('a');
+        link.download = data.sn + '_最終商品文件.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+    } finally {
+        document.body.removeChild(container);
     }
-
-    printWin.document.write(`<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8" />
-    <title>${escHtml(data.sn)}_最終商品文件</title>
-    <style>
-        * { box-sizing: border-box; }
-        body {
-            font-family: "微軟正黑體", "Microsoft JhengHei", sans-serif;
-            font-size: 12pt;
-            line-height: 1.7;
-            color: #111;
-            width: 170mm;
-            margin: 20mm auto;
-            padding: 0;
-        }
-        h2  { font-size: 13pt; font-weight: bold; margin: 0 0 8pt; }
-        p   { margin: 3pt 0; }
-        img { max-width: 100%; display: block; margin: 6pt 0; }
-        @media print {
-            @page { size: A4; margin: 20mm; }
-            body  { margin: 0; width: 100%; }
-        }
-    </style>
-    
-</head>
-<body>${content}</body>
-</html>`);
-
-    printWin.document.close();
-    setTimeout(() => {
-        printWin.focus();
-        printWin.print();
-    }, 500);
 }
 
 // ----------------------------------------------------------------
-// 八、建立文件 HTML 內容（Word 與 PDF 共用同一來源）
+// 八、建立文件 HTML 內容（Word、PNG、預覽 共用同一來源）
 // ----------------------------------------------------------------
 function buildDocumentHtml(data) {
-    const ekiLine = data.eki
-        ? `<p><strong>下限價格EKI：</strong>對任一連結標的而言，其期初價之 ${data.eki}%</p>`
+    var ekiLine = data.eki
+        ? '<p><strong>下限價格<span style="color:#c00000;">EKI</span>：</strong>對任一連結標的而言，其期初價之 <span style="color:#c00000;">' + data.eki + '%</span></p>'
         : '';
 
-    const koTableBlock = (data.productType === 'STEPDOWN' && data.imgKo?.startsWith('data:'))
-        ? `<img src="${data.imgKo}" style="max-width:100%;display:block;margin:8px 0;" />`
+    var koTableBlock = (data.productType === 'STEPDOWN' &&
+        data.imgKo && data.imgKo.indexOf('data:') === 0)
+        ? '<p style="text-align:center;margin:8px 0;"><img src="' + data.imgKo + '" style="max-width:100%;display:inline-block;" /></p>'
         : '';
 
-    const couponBlock = data.productType === 'DAC'
-        ? `<p>每月配息：於各交割日，發行機構將依下列計算公式以美元為計價單位給付：</p>
-           <p>每月配息金額 = 商品面額 × 100% × <strong>${data.coupon}%</strong> × (1/12)（四捨五入至小數點後第 2 位）× (n/N)</p>
-           <p>n = 所有連結標的之收盤價同時大於或等於其配息下層界線之觀察日天數</p>
-           <p>N = 觀察期間的觀察日總數</p>
-           <p><strong>配息觀察期間及配息交割日</strong></p>`
-        : `<p>每月固定配息：於各交割日，發行機構將依下列計算公式以美元為計價單位給付：</p>
-           <p>每月配息金額 = 每單位商品面額 × <strong>${data.coupon}%</strong>（即年利率 ${data.coupon}%）</p>
-           <p><strong>觀察期間及配息交割日：</strong></p>`;
+    var couponBlock = data.productType === 'DAC'
+        ? '<p>每月配息：於各交割日，發行機構將依下列計算公式以美元為計價單位給付：</p>' +
+        '<p>每月配息金額 = 商品面額 × 100% × <strong style="color:#c00000;">' + data.coupon + '%</strong> × (1/12)' +
+        '（四捨五入至小數點後第 2 位）× (n/N)</p>' +
+        '<p>n = 所有連結標的之收盤價同時大於或等於其配息下層界線之觀察日天數</p>' +
+        '<p>N = 觀察期間的觀察日總數</p>' +
+        '<p><strong>配息觀察期間及配息交割日</strong></p>'
+        : '<p>每月固定配息：於各交割日，發行機構將依下列計算公式以美元為計價單位給付：</p>' +
+        '<p>每月配息金額 = 每單位商品面額 × <strong>' + data.coupon + '%</strong>' +
+        '（即年利率 ' + data.coupon + '%）</p>' +
+        '<p><strong>觀察期間及配息交割日：</strong></p>';
 
-    return `
-        <h2>${escHtml(buildTitle(data))}</h2>
-        <p><strong>期初價：</strong>對任一連結標的而言，其交易日之價格。</p>
-        <p><strong>記憶式自動提前出場價：</strong>對任一連結標的而言，其期初價 ${data.ko}%。</p>
-        <p><strong>執行價(轉換價)：</strong>對任一連結標的而言，其期初價之 ${data.strike}%。</p>
-        ${ekiLine}
-        <p><strong>連結標的：</strong></p>
-        <img src="${data.imgStock}" style="max-width:100%;display:block;margin:8px 0;" />
-        ${koTableBlock}
-        <p><strong>商品年期：</strong>${parseInt(data.tenor)}個月（本商品發生記憶式自動提前出場事件除外）</p>
-        <p><strong>交易日：</strong>${formatDate(data.tradeDate)}</p>
-        <p><strong>發行日：</strong>${formatDate(data.issueDate)}</p>
-        <p><strong>到期日：</strong>${formatDate(data.maturityDate)}</p>
-        <p><strong>記憶式自動提前出場事件：</strong>${formatDate(data.koStartDate)}(含) 起至期末評價日 ${formatDate(data.finalValDate)}(含)</p>
-        <p>當所有連結標的之收盤價都曾經大於或等於其自動出場觸發水準，則本商品滿足記憶式自動提前出場條款。</p>
-        ${couponBlock}
-        <img src="${data.imgSchedule}" style="max-width:100%;display:block;margin:8px 0;" />
-        <p style="text-align:center;font-style:italic;margin-top:32px;color:#555;font-size:12px;">
-            上述資料均節錄自附件「中文產品說明書」，僅供投資人參考使用。
-        </p>`;
+    var stockImagesHtml = (data.imgStockList || []).map(function (src) {
+        return '<p style="text-align:center;margin:8px 0;"><img src="' + src + '" style="max-width:100%;display:inline-block;" /></p>';
+    }).join('');
+
+    var scheduleImagesHtml = (data.imgScheduleList || []).map(function (src) {
+        return '<p style="text-align:center;margin:8px 0;"><img src="' + src + '" style="max-width:100%;display:inline-block;" /></p>';
+    }).join('');
+
+    return '<h2 style="color:#c00000;">' + escHtml(buildTitle(data)) + '</h2>' +
+        '<p><strong>期初價：</strong>對任一連結標的而言，其交易日之價格。</p>' +
+        '<p><strong>記憶式自動提前出場價：</strong>對任一連結標的而言，其期初價 ' + data.ko + '%。</p>' +
+        '<p><strong>執行價(轉換價)：</strong>對任一連結標的而言，其期初價之 <span style="color:#c00000;">' + data.strike + '%</span>。</p>' +
+        ekiLine +
+        '<p><strong>連結標的：</strong></p>' +
+        stockImagesHtml +
+        koTableBlock +
+        '<p><strong>商品年期：</strong>' + parseInt(data.tenor) + '個月' +
+        '（本商品發生記憶式自動提前出場事件除外）</p>' +
+        '<p><strong>交易日：</strong>' + formatDate(data.tradeDate) + '</p>' +
+        '<p><strong>發行日：</strong>' + formatDate(data.issueDate) + '</p>' +
+        '<p><strong>到期日：</strong>' + formatDate(data.maturityDate) + '</p>' +
+        '<p><strong>記憶式自動提前出場事件：</strong>' +
+        '<span style="color:#c00000;">' + formatDate(data.koStartDate) + '(含)</span>' +
+        ' 起至期末評價日 ' +
+        '<span style="color:#1f3864;">' + formatDate(data.finalValDate) + '(含)</span>' +
+        '當所有連結標的之收盤價都曾經大於或等於其自動出場觸發水準，' +
+        '則本商品滿足記憶式自動提前出場條款。</p>' +
+        couponBlock +
+        scheduleImagesHtml +
+        '<p style="text-align:center;font-style:italic;margin-top:32px;color:#4472c4;font-size:12px;">' +
+        '上述資料均節錄自附件「中文產品說明書」，僅供投資人參考使用。</p>';
 }
 
 // ----------------------------------------------------------------
 // 九、按鈕綁定
 // ----------------------------------------------------------------
 function bindFdButton(btnId, label, handler) {
-    const btn = document.getElementById(btnId);
+    var btn = document.getElementById(btnId);
     if (!btn) return;
-    btn.addEventListener('click', async () => {
-        const data = getFdFormData();
-        const err = validateFdForm(data);
+    btn.addEventListener('click', async function () {
+        var data = getFdFormData();
+        var err = validateFdForm(data);
         if (err) { alert(err); return; }
         btn.disabled = true;
         btn.textContent = '⏳ 產生中...';
@@ -293,7 +373,7 @@ function bindFdButton(btnId, label, handler) {
             await handler(data);
         } catch (e) {
             console.error(e);
-            alert(`產生失敗：${e.message}`);
+            alert('產生失敗：' + e.message);
         } finally {
             btn.disabled = false;
             btn.textContent = label;
@@ -302,4 +382,28 @@ function bindFdButton(btnId, label, handler) {
 }
 
 bindFdButton('fd-downloadWord', '⬇ 下載 Word', generateWord);
-bindFdButton('fd-downloadPdf', '⬇ 下載 PDF', generatePdf);
+bindFdButton('fd-downloadPng', '⬇ 下載 PNG', generateImage);
+
+// ----------------------------------------------------------------
+// 開發用：預設填入測試數值（正式上線前可整段刪除）
+// ----------------------------------------------------------------
+(function prefillFdForm() {
+    var defaults = {
+        'fd-sn': '2026SN2228',
+        'fd-coupon': '17.17',
+        'fd-ko': '96',
+        'fd-strike': '80',
+        'fd-eki': '60',
+        'fd-tradeDate': '2026-05-06',
+        'fd-issueDate': '2026-05-13',
+        'fd-maturityDate': '2026-11-17',
+        'fd-koStartDate': '2026-06-15',
+        'fd-finalValDate': '2026-11-13',
+    };
+    Object.keys(defaults).forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el) el.value = defaults[id];
+    });
+    var issuerEl = document.getElementById('fd-issuer');
+    if (issuerEl) issuerEl.value = 'DBS';
+})();

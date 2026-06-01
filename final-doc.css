@@ -16,7 +16,7 @@
     color: var(--color-text, #111827);
     font-weight: 600;
     margin: 20px 0 10px;
-    padding-bottom: 6px;
+    padding: 0 18px 6px;
     border-bottom: 1px solid var(--color-border-input, #d1d5db);
 }
 
@@ -26,6 +26,15 @@
     flex-direction: column;
     gap: 16px;
     margin-top: 4px;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+    padding: 0 18px;
+}
+
+.fd-upload-block {
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .fd-upload-label {
@@ -33,6 +42,7 @@
     color: var(--color-text-mid, #374151);
     font-weight: 600;
     margin: 0 0 6px;
+    padding-left: 0;
 }
 
 /* ---------- 上傳區域（虛線框） ---------- */
@@ -47,6 +57,9 @@
     transition: border-color 0.18s ease, background 0.18s ease;
     overflow: hidden;
     min-height: 90px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
     .fd-upload-zone:hover {
@@ -117,17 +130,66 @@
         display: none;
     }
 
+/* ---------- 多張圖片預覽列表 ---------- */
+.fd-img-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+    .fd-img-list img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 4px;
+    }
+
+/* ---------- 圖片項目 + 刪除按鈕 ---------- */
+.fd-img-item {
+    position: relative;
+    display: block;
+}
+
+.fd-img-remove {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 22px;
+    height: 22px;
+    margin: 0;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.55);
+    color: #fff;
+    font-size: 12px;
+    line-height: 22px;
+    text-align: center;
+    cursor: pointer;
+    z-index: 3;
+    transition: background 0.15s ease;
+}
+
+    .fd-img-remove:hover {
+        background: rgba(192, 0, 0, 0.85);
+    }
+
+
 /* ---------- 產生按鈕列 ---------- */
 .fd-actions {
     display: flex;
     gap: 12px;
     margin-top: 24px;
     flex-wrap: wrap;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 18px;
 }
 
     .fd-actions button {
         flex: 1;
-        min-width: 150px;
+        min-width: 130px;
         height: var(--height-modal-btn, 40px);
         border-radius: var(--radius-modal-btn, 6px);
         font-size: var(--font-size-ui, 14px);
@@ -153,3 +215,13 @@
         .fd-actions .fd-btn-secondary:hover {
             background: #f0f6ff;
         }
+
+/* ---------- 日期輸入欄位手機溢出修正 ---------- */
+#section-final-doc .field {
+    min-width: 0;
+}
+
+#section-final-doc input[type="date"] {
+    width: 100%;
+    box-sizing: border-box;
+}

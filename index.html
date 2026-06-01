@@ -13,11 +13,14 @@
     <nav class="topbar">
         <div class="brand">結構型商品</div>
         <a href="#" class="nav-disabled">總覽<span class="status-badge">尚未開放</span></a>
+
+        <a class="active" href="#" data-section="quote">報價</a>
+        <a href="#" data-section="final-doc">最終文件<span class="status-badge">測試中</span></a>
+
         <a href="#" class="nav-disabled">商品<span class="status-badge">尚未開放</span></a>
         <a href="#" class="nav-disabled">客戶<span class="status-badge">尚未開放</span></a>
-        <a class="active" href="#" data-section="quote">報價</a>
         <a href="#" class="nav-disabled">報告<span class="status-badge">尚未開放</span></a>
-        <a href="#" data-section="final-doc">最終文件<span class="status-badge">測試中</span></a>
+
     </nav>
 
     <main class="layout" id="section-quote">
@@ -112,8 +115,10 @@
                 <div class="field">
                     <label>記憶式</label>
                     <select id="memoryKo">
-                        <option value="YES" selected>YES</option>
-                        <option value="NO">NO</option>
+                        <option value="-" selected>-</option>
+
+                        <option value="每日記憶">每日記憶</option>
+                        <option value="每月記憶">每月記憶</option>
                     </select>
                 </div>
 
@@ -361,15 +366,15 @@
                 <div class="fd-upload-block">
                     <p class="fd-upload-label">① 連結標的表格</p>
                     <div class="fd-upload-zone" id="fd-zone-stock">
-                        <input type="file" id="fd-file-stock" accept="image/*" />
+                        <input type="file" id="fd-file-stock" accept="image/*" multiple />
                         <div class="fd-upload-ph">
                             <span class="fd-upload-icon">⬆</span>
                             <p>點擊上傳連結標的表格圖片</p>
-                            <p class="fd-upload-sub">支援 PNG、JPG</p>
+                            <p class="fd-upload-sub">支援 PNG、JPG，可選多張</p>
                         </div>
                         <div class="fd-upload-prev" style="display:none">
-                            <img id="fd-img-stock" src="" alt="" />
-                            <p class="fd-upload-change">點擊更換圖片</p>
+                            <div class="fd-img-list" id="fd-img-list-stock"></div>
+                            <p class="fd-upload-change">點擊繼續新增圖片</p>
                         </div>
                     </div>
                 </div>
@@ -377,15 +382,15 @@
                 <div class="fd-upload-block">
                     <p class="fd-upload-label">② 觀察期間及配息交割日表</p>
                     <div class="fd-upload-zone" id="fd-zone-schedule">
-                        <input type="file" id="fd-file-schedule" accept="image/*" />
+                        <input type="file" id="fd-file-schedule" accept="image/*" multiple />
                         <div class="fd-upload-ph">
                             <span class="fd-upload-icon">⬆</span>
                             <p>點擊上傳日期排程表格圖片</p>
-                            <p class="fd-upload-sub">支援 PNG、JPG</p>
+                            <p class="fd-upload-sub">支援 PNG、JPG，可選多張</p>
                         </div>
                         <div class="fd-upload-prev" style="display:none">
-                            <img id="fd-img-schedule" src="" alt="" />
-                            <p class="fd-upload-change">點擊更換圖片</p>
+                            <div class="fd-img-list" id="fd-img-list-schedule"></div>
+                            <p class="fd-upload-change">點擊繼續新增圖片</p>
                         </div>
                     </div>
                 </div>
@@ -408,8 +413,8 @@
             </div>
 
             <div class="fd-actions">
-                <button id="fd-downloadWord" type="button">⬇ 下載 Word</button>
-                <button id="fd-downloadPdf" type="button" class="fd-btn-secondary">⬇ 下載 PDF</button>
+                <button id="fd-downloadWord" type="button" class="fd-btn-secondary">⬇ 下載 Word</button>
+                <button id="fd-downloadPng" type="button" class="fd-btn-secondary">⬇ 下載 PNG</button>
             </div>
         </section>
 
@@ -443,7 +448,9 @@
         </div>
     </div>
 
+
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/html-docx-js/dist/html-docx.js"></script>
     <script src="script.js"></script>
     <script src="final-doc.js"></script>

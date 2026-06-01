@@ -300,6 +300,10 @@ button {
         background: var(--color-primary-hover);
     }
 
+#generateQuote {
+    margin-left: 18px;
+}
+
 .help {
     padding-bottom: 16px;
 }
