@@ -285,7 +285,7 @@ body {
         }
 
 button {
-    margin: 22px 18px 0;
+    margin: 22px 0 0; /*修改"抓取參考進場價"位置跟尺寸*/
     height: var(--height-input);
     padding: 0 18px;
     border: 0;
