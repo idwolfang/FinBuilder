@@ -221,6 +221,7 @@
             </div>
 
             <button id="generateQuote" type="button">產生報價圖片</button>
+            <button id="generateChart" type="button">產生報價線圖<span class="status-badge">Test</span></button>
 
             <div class="offscreen-container">
                 <div id="quotePreview" class="quote-preview"></div>
@@ -459,10 +460,26 @@
         </div>
     </div>
 
+    <div id="chartModal" class="modal-overlay">
+        <div class="modal-content" style="max-width:900px; width:95%;">
+            <div id="chartContainer" style="width:100%; height:500px;"></div>
+            <div class="modal-actions">
+                <button id="chartDownload" type="button">⬇ 下載圖片</button>
+                <button id="chartPrev" type="button" style="display:none;">← 上一檔</button>
+                <span id="chartPageInfo" style="font-size:14px; color:#666;"></span>
+                <button id="chartNext" type="button" style="display:none;">下一檔 →</button>
+                <button id="closeChartModal" type="button" class="btn-close">✖ 關閉</button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/html-docx-js/dist/html-docx.js"></script>
     <script src="core.js"></script>
     <script src="quote.js"></script>
     <script src="final-doc.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.26.0/plotly.min.js"></script>
+    <script src="chart.js"></script>
 </body>
 </html>
