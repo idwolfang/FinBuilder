@@ -113,6 +113,25 @@ function initUploadZone(zoneId, fileInputId, imgId) {
             zone.querySelector('.fd-upload-ph').style.display = 'none';
             zone.querySelector('.fd-upload-prev').style.display = 'block';
             zone.classList.add('has-image');
+
+            // 防止重複新增刪除按鈕
+            var existing = zone.querySelector('.fd-img-remove');
+            if (existing) existing.remove();
+
+            var removeBtn = document.createElement('button');
+            removeBtn.type = 'button';
+            removeBtn.className = 'fd-img-remove';
+            removeBtn.textContent = '✕';
+            removeBtn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                e.preventDefault();
+                img.src = '';
+                fileInput.value = '';
+                zone.querySelector('.fd-upload-ph').style.display = '';
+                zone.querySelector('.fd-upload-prev').style.display = 'none';
+                zone.classList.remove('has-image');
+            });
+            zone.querySelector('.fd-upload-prev').appendChild(removeBtn);
         };
         reader.readAsDataURL(file);
     });
@@ -168,9 +187,12 @@ function validateFdForm(data) {
         return '請上傳連結標的表格圖片';
     if (!zoneSchedule || !zoneSchedule.classList.contains('has-image'))
         return '請上傳觀察期間及配息交割日表格圖片';
+
+    /*
     if (data.productType === 'STEPDOWN' &&
         (!zoneKo || !zoneKo.classList.contains('has-image')))
         return '步階式出場商品請上傳 KO 遞減時程表圖片';
+    */
 
     return null;
 }
@@ -391,8 +413,8 @@ bindFdButton('fd-downloadPng', '⬇ 下載 PNG', generateImage);
 // 開發用：預設填入測試數值（正式上線前可整段刪除）
 // ----------------------------------------------------------------
 
-/*
-(function prefillFdForm() {
+
+/*(function prefillFdForm() {
     var defaults = {
         'fd-sn': '2026SN2228',
         'fd-coupon': '17.17',
@@ -411,5 +433,4 @@ bindFdButton('fd-downloadPng', '⬇ 下載 PNG', generateImage);
     });
     var issuerEl = document.getElementById('fd-issuer');
     if (issuerEl) issuerEl.value = 'DBS';
-})();
-*/
+})();*/
