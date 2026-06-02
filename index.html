@@ -438,7 +438,6 @@
                 <img id="previewImg" src="" alt="報價預覽圖片" />
             </div>
             <div class="modal-actions">
-                <button id="downloadModal" type="button">⬇️ 下載圖片</button>
                 <button id="closeModal" type="button" class="btn-close">✖ 關閉</button>
             </div>
         </div>
@@ -462,13 +461,17 @@
 
     <div id="chartModal" class="modal-overlay">
         <div class="modal-content" style="max-width:900px; width:95%;">
-            <div id="chartContainer" style="width:100%; height:500px;"></div>
-            <div class="modal-actions">
-                <button id="chartDownload" type="button">⬇ 下載圖片</button>
-                <button id="chartPrev" type="button" style="display:none;">← 上一檔</button>
-                <span id="chartPageInfo" style="font-size:14px; color:#666;"></span>
-                <button id="chartNext" type="button" style="display:none;">下一檔 →</button>
-                <button id="closeChartModal" type="button" class="btn-close">✖ 關閉</button>
+            <div class="img-scroll-container">
+                <img id="chartImg" src="" alt="報價線圖" style="width:100%;" />
+            </div>
+            <div class="modal-actions" style="flex-direction:column; gap:8px;">
+                <button id="chartInteractive" type="button" style="width:100%;">互動線圖</button>
+                <div style="display:flex; align-items:center; justify-content:center; gap:12px; width:100%;">
+                    <button id="chartPrev" type="button" style="display:none;">⬅️</button>
+                    <span id="chartPageInfo" style="font-size:14px; color:#666;"></span>
+                    <button id="chartNext" type="button" style="display:none;">➡️</button>
+                    <button id="closeChartModal" type="button" class="btn-close">取消</button>
+                </div>
             </div>
         </div>
     </div>

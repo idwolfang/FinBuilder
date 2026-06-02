@@ -10,7 +10,6 @@ const quotePreview = document.querySelector("#quotePreview");
 const modal = document.getElementById("previewModal");
 const previewImg = document.getElementById("previewImg");
 const closeModalBtn = document.getElementById("closeModal");
-const downloadModalBtn = document.getElementById("downloadModal");
 
 // 表單連動邏輯
 const productTypeSelect = document.getElementById("productType");
@@ -75,14 +74,6 @@ generateQuoteButton.addEventListener("click", async () => {
             previewImg.src = imageUrl;
             modal.classList.add("active");
             priceStatus.textContent = "報價圖片已產生，請於畫面上方預覽或下載。";
-
-            // 綁定下載按鈕
-            downloadModalBtn.onclick = () => {
-                const link = document.createElement("a");
-                link.href = imageUrl;
-                link.download = `quote-${Date.now()}.png`;
-                link.click();
-            };
 
         } catch (error) {
             priceStatus.textContent = "產生圖片失敗，請重新整理後再試一次。";

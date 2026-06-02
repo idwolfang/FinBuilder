@@ -44,7 +44,8 @@ async function generateChartForStock(symbol, name, strikePercent, koPercent) {
         x: dates, y: vols,
         type: "bar", name: "成交量",
         marker: { color: colors },
-        xaxis: "x", yaxis: "y2"
+        xaxis: "x", yaxis: "y2",
+        showlegend: false
     };
 
     const layout = {
@@ -67,15 +68,24 @@ async function generateChartForStock(symbol, name, strikePercent, koPercent) {
         paper_bgcolor: "#fff"
     };
 
-    const container = document.getElementById("chartContainer");
+    // 用隱藏的 div 產生 Plotly 圖，再轉成靜態圖片
+    const tempDiv = document.createElement("div");
+    tempDiv.style.cssText = "position:fixed; left:-9999px; top:0; width:900px; height:500px;";
+    document.body.appendChild(tempDiv);
 
-    Plotly.newPlot(container, [
+    await Plotly.newPlot(tempDiv, [
         traceLine,
         makeHLine(REF_ENTRY, `參考進場價(${REF_ENTRY})`, "#e05c5c", "dash"),
         makeHLine(REF_STRIKE, `執行價${strikePercent}%(${REF_STRIKE})`, "#e8a020", "dash"),
         makeHLine(REF_KO, `出場價${koPercent}%(${REF_KO})`, "#8e44ad", "dash"),
         traceVol
-    ], layout, { responsive: true });
+    ], layout, { responsive: false });
+
+    const imgData = await Plotly.toImage(tempDiv, { format: "png", width: 900, height: 500 });
+    document.body.removeChild(tempDiv);
+
+    // 把圖片塞進燈箱
+    document.getElementById("chartImg").src = imgData;
 
     // 更新換頁按鈕狀態
     document.getElementById("chartPrev").style.display = chartCurrentIndex > 0 ? "inline-block" : "none";
@@ -83,6 +93,9 @@ async function generateChartForStock(symbol, name, strikePercent, koPercent) {
     document.getElementById("chartPageInfo").textContent = chartStocks.length > 1
         ? `${chartCurrentIndex + 1} / ${chartStocks.length}`
         : "";
+
+    // 儲存目前圖的資料供互動線圖用
+    window._chartLastData = { symbol, name, strikePercent, koPercent, data };
 }
 
 function bindChartButton() {
@@ -152,16 +165,78 @@ function bindChartButton() {
         }
     });
 
-    // 下載圖片
-    document.getElementById("chartDownload").addEventListener("click", () => {
-        const symbol = chartStocks[chartCurrentIndex].symbol;
-        Plotly.downloadImage("chartContainer", {
-            format: "png",
-            width: 1200,
-            height: 700,
-            filename: `${symbol}-chart`
+    // 互動線圖：開新分頁
+    document.getElementById("chartInteractive").addEventListener("click", () => {
+        const d = window._chartLastData;
+        if (!d) return;
+
+        const dates = d.data.map(x => x.date);
+        const closes = d.data.map(x => x.close);
+        const vols = d.data.map(x => x.volume);
+        const colors = d.data.map((x, i) =>
+            x.close >= (i > 0 ? d.data[i - 1].close : x.open) ? "#e05c5c" : "#4caf7d"
+        );
+        const lastClose = closes[closes.length - 1];
+        const REF_ENTRY = lastClose;
+        const REF_STRIKE = Math.round(REF_ENTRY * (d.strikePercent / 100) * 100) / 100;
+        const REF_KO = Math.round(REF_ENTRY * (d.koPercent / 100) * 100) / 100;
+
+        const hLine = (y, label, color) => ({
+            x: [dates[0], dates[dates.length - 1]], y: [y, y],
+            type: "scatter", mode: "lines", name: label,
+            line: { color: color, dash: "dash", width: 1.5 },
+            xaxis: "x", yaxis: "y"
         });
+
+        const traces = [
+            {
+                x: dates, y: closes,
+                type: "scatter", mode: "lines",
+                name: d.symbol + " " + d.name,
+                line: { color: "#e05c5c", width: 2 }
+            },
+            hLine(REF_ENTRY, "參考進場價(" + REF_ENTRY + ")", "#e05c5c"),
+            hLine(REF_STRIKE, "執行價" + d.strikePercent + "%(" + REF_STRIKE + ")", "#e8a020"),
+            hLine(REF_KO, "出場價" + d.koPercent + "%(" + REF_KO + ")", "#8e44ad"),
+            {
+                x: dates, y: vols,
+                type: "bar", name: "成交量",
+                marker: { color: colors },
+                xaxis: "x", yaxis: "y2",
+                showlegend: false
+            }
+        ];
+
+        const layout = {
+            title: { text: d.symbol + " " + d.name, font: { size: 16 } },
+            grid: { rows: 2, columns: 1, subplots: [["xy"], ["xy2"]], roworder: "top to bottom" },
+            xaxis: { showgrid: true, gridcolor: "#eee" },
+            yaxis: { domain: [0.3, 1], title: "Price (USD)", showgrid: true, gridcolor: "#eee" },
+            yaxis2: { domain: [0, 0.25], title: "Volume", showgrid: false },
+            legend: { x: 0, y: 1, bgcolor: "rgba(255,255,255,0.8)", borderwidth: 1 },
+            margin: { t: 50, r: 80, b: 40, l: 60 },
+            plot_bgcolor: "#fff", paper_bgcolor: "#fff"
+        };
+
+        const html = "<!DOCTYPE html><html><head>"
+            + '<meta charset="UTF-8">'
+            + "<title>" + d.symbol + " " + d.name + "</title>"
+            + '<script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.26.0/plotly.min.js"><' + "/script>"
+            + '</head><body style="margin:0">'
+            + '<div id="c" style="width:100%;height:100vh"></div>'
+            + "<script>"
+            + "Plotly.newPlot('c',"
+            + JSON.stringify(traces) + ","
+            + JSON.stringify(layout) + ","
+            + "{responsive:true});"
+            + "<" + "/script>"
+            + "</body></html>";
+
+        const blob = new Blob([html], { type: "text/html" });
+        const url = URL.createObjectURL(blob);
+        window.open(url, "_blank");
     });
+
 
     // 關閉燈箱
     document.getElementById("closeChartModal").addEventListener("click", () => {
