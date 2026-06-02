@@ -268,7 +268,8 @@ button {
 
 .img-scroll-container {
     width: 100%;
-    overflow-x: auto;
+    overflow: auto;
+    max-height: 65vh;
     border-radius: var(--radius-input);
     border: 1px solid var(--color-border-img);
     background: white;

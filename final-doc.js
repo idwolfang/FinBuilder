@@ -267,13 +267,38 @@ async function generateImage(data) {
             useCORS: true,
             allowTaint: true,
         });
-        var link = document.createElement('a');
-        link.download = data.sn + '_最終商品文件.png';
-        link.href = canvas.toDataURL('image/png');
-        link.click();
+        var imageUrl = canvas.toDataURL('image/png');
+
+        var fdModal = document.getElementById('fdPreviewModal');
+        var fdPreviewImg = document.getElementById('fdPreviewImg');
+        var fdDownloadBtn = document.getElementById('fdDownloadModal');
+
+        fdPreviewImg.src = imageUrl;
+        fdModal.classList.add('active');
+
+        fdDownloadBtn.onclick = function () {
+            var link = document.createElement('a');
+            link.href = imageUrl;
+            link.download = data.sn + '_最終商品文件.png';
+            link.click();
+        };
     } finally {
         document.body.removeChild(container);
     }
+}
+
+// 燈箱關閉邏輯
+var fdModal = document.getElementById('fdPreviewModal');
+var fdCloseBtn = document.getElementById('fdCloseModal');
+if (fdCloseBtn) {
+    fdCloseBtn.addEventListener('click', function () {
+        fdModal.classList.remove('active');
+    });
+}
+if (fdModal) {
+    fdModal.addEventListener('click', function (e) {
+        if (e.target === fdModal) fdModal.classList.remove('active');
+    });
 }
 
 // ----------------------------------------------------------------

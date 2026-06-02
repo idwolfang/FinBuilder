@@ -216,6 +216,16 @@
             background: #f0f6ff;
         }
 
+#fd-downloadPng {
+    background: var(--color-primary);
+    color: white;
+    border: none;
+}
+
+    #fd-downloadPng:hover {
+        background: var(--color-primary-deep);
+    }
+
 /* ---------- 日期輸入欄位手機溢出修正 ---------- */
 #section-final-doc .field {
     min-width: 0;
