@@ -1,0 +1,450 @@
+﻿/* ============================================================
+   quote.css  —  報價圖片產生器 專用樣式
+   繼承 shared.css 的 CSS variables，不重複宣告
+   ============================================================ */
+
+/* ╔═════════════════════════════════════════════════════════╗
+   ║     報價圖片表格 - 1~8區 視覺控制台（修改這裡即可）          ║
+   ╚═════════════════════════════════════════════════════════╝ */
+:root {
+    --table-padding: 8px 10px;
+    --table-border-color: #001000;
+    --table-base-font-size: 28px;
+    --capture-width: 1080px;
+    --capture-padding: 10px;
+    --modal-max-width: 820px;
+    --z1-width: 20%;
+    --z1-font-size: 28px;
+    --z1-color: #000000;
+    --z1-align: left;
+    --z1-weight: 600;
+    --z2-width: 16%;
+    --z2-font-size: 28px;
+    --z2-color: #000000;
+    --z2-align: center;
+    --z2-weight: bold;
+    --z3-font-size: 28px;
+    --z3-color: #dc2626;
+    --z3-align: center;
+    --z3-weight: bold;
+    --z4-font-size: 28px;
+    --z4-color: #dc2626;
+    --z4-align: left;
+    --z4-weight: bold;
+    --z5-font-size: 28px;
+    --z5-color: #000000;
+    --z5-align: center;
+    --z5-weight: bold;
+    --z6-font-size: 28px;
+    --z6-color: #000000;
+    --z6-align: left;
+    --z6-weight: normal;
+    --z7-font-size: 28px;
+    --z7-color: #000000;
+    --z7-align: center;
+    --z7-weight: bold;
+    --z8-font-size: 28px;
+    --z8-color: #000000;
+    --z8-align: center;
+    --z8-weight: 600;
+    --z-col-width: 16%;
+}
+
+/* =========================================
+   報價日期列
+   ========================================= */
+.panel .date-wrapper {
+    padding: 0 18px;
+}
+
+    .panel .date-wrapper label {
+        display: block;
+        margin: 18px 0 8px;
+        font-size: var(--font-size-ui);
+    }
+
+    .panel .date-wrapper input#quoteDate {
+        -webkit-appearance: none !important;
+        appearance: none !important;
+        background-color: #ffffff !important;
+        color: var(--color-text) !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        box-sizing: border-box !important;
+        height: var(--height-input) !important;
+        line-height: var(--height-input) !important;
+        text-align: center !important;
+        border: 1px solid var(--color-border-input);
+        border-radius: var(--radius-input);
+        padding: var(--padding-input);
+        font-size: var(--font-size-ui);
+        display: block !important;
+    }
+
+/* =========================================
+   報價專用按鈕
+   ========================================= */
+button {
+    margin: 22px 0 0;
+}
+
+#generateQuote {
+    margin-left: 18px;
+}
+
+#priceStatus {
+    margin: 14px 18px 0;
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+/* =========================================
+   連結標的勾選區
+   ========================================= */
+.underlyings {
+    padding: var(--padding-section);
+}
+
+    .underlyings h3 {
+        margin: 12px 0 14px;
+        font-size: var(--font-size-section-h3);
+        color: var(--color-text-mid);
+    }
+
+.stock-columns {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(130px, 1fr));
+    gap: 20px;
+}
+
+    .stock-columns h4 {
+        margin: 0 0 8px;
+        font-size: var(--font-size-stock-h4);
+        font-weight: 600;
+        color: var(--color-text-sub);
+    }
+
+    .stock-columns label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 8px 0;
+        font-size: var(--font-size-ui);
+        line-height: 1.25;
+    }
+
+    .stock-columns input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+        margin: 0;
+    }
+
+.custom-stock-add {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 4px 0;
+}
+
+    .custom-stock-add input {
+        height: var(--height-input);
+        border: 1px solid var(--color-border-input);
+        border-radius: var(--radius-input);
+        padding: var(--padding-input);
+        font-size: var(--font-size-ui);
+        color: var(--color-text);
+        width: 180px;
+    }
+
+    .custom-stock-add button {
+        margin: 0;
+        height: var(--height-input);
+        white-space: nowrap;
+    }
+
+.custom-remove {
+    margin-left: 4px;
+    color: var(--color-text-ghost);
+    cursor: pointer;
+    font-size: var(--font-size-xs);
+}
+
+    .custom-remove:hover {
+        color: var(--color-accent-red);
+    }
+
+/* =========================================
+   說明欄
+   ========================================= */
+.quote-help {
+    background: white;
+    border: 1px solid var(--color-border-panel);
+    border-radius: var(--radius-panel);
+    box-shadow: var(--shadow-panel);
+    padding-bottom: 16px;
+}
+
+    .quote-help h2 {
+        margin: 0;
+        padding: var(--padding-panel-h2);
+        height: var(--height-panel-h2);
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        background: var(--color-dark);
+        color: white;
+        font-size: var(--font-size-panel-h2);
+        border-radius: var(--radius-panel) var(--radius-panel) 0 0;
+    }
+
+    .quote-help ol {
+        margin: 16px 24px;
+        padding-left: 18px;
+        line-height: 1.8;
+        font-size: var(--font-size-ui);
+    }
+
+    .quote-help a {
+        color: var(--color-primary);
+        font-weight: 600;
+    }
+
+/* =========================================
+   截圖容器與燈箱 (Modal)
+   ========================================= */
+.offscreen-container {
+    position: absolute;
+    top: 0;
+    left: -9999px;
+    width: var(--capture-width);
+}
+
+.quote-preview {
+    margin: 0;
+}
+
+.capture-area {
+    background-color: #ffffff;
+    width: var(--capture-width);
+    padding: var(--capture-padding);
+    margin: 0;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(15, 23, 42, 0.85);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+}
+
+    .modal-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+.modal-content {
+    width: 90%;
+    max-width: var(--modal-max-width);
+    background: var(--color-bg-modal);
+    border-radius: var(--radius-modal);
+    padding: 16px;
+    box-shadow: var(--shadow-modal);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.img-scroll-container {
+    width: 100%;
+    overflow-x: auto;
+    border-radius: var(--radius-input);
+    border: 1px solid var(--color-border-img);
+    background: white;
+}
+
+.modal-content img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.modal-actions {
+    margin-top: 16px;
+    display: flex;
+    gap: 12px;
+    width: 100%;
+    justify-content: center;
+}
+
+    .modal-actions button {
+        flex: 1;
+        margin: 0;
+        height: var(--height-modal-btn);
+        border-radius: var(--radius-modal-btn);
+        font-size: var(--font-size-ui);
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: var(--shadow-btn);
+        transition: transform 0.1s ease, background 0.2s ease;
+    }
+
+        .modal-actions button:active {
+            transform: scale(0.97);
+        }
+
+#downloadModal {
+    background: var(--color-primary);
+    color: white;
+}
+
+    #downloadModal:hover {
+        background: var(--color-primary-deep);
+    }
+
+.btn-close {
+    background: var(--color-border-img);
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border-close);
+    box-shadow: none !important;
+}
+
+    .btn-close:hover {
+        background: var(--color-border-close);
+    }
+
+/* =========================================
+   報價圖片表格（已套用 1~8 區控制面板）
+   ========================================= */
+.modern-quote-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--table-base-font-size);
+    border: 2px solid var(--table-border-color);
+    table-layout: fixed;
+}
+
+    .modern-quote-table td {
+        border: 1px solid var(--table-border-color);
+        padding: var(--table-padding);
+        text-align: center;
+        vertical-align: middle;
+        white-space: nowrap;
+    }
+
+.label-en {
+    width: var(--z1-width) !important;
+    font-size: var(--z1-font-size);
+    color: var(--z1-color);
+    text-align: var(--z1-align) !important;
+    font-weight: var(--z1-weight);
+    padding-left: 10px !important;
+}
+
+.modern-quote-table tbody:first-of-type tr td:nth-child(2) {
+    width: var(--z2-width) !important;
+}
+
+.label-zh {
+    font-size: var(--z2-font-size);
+    color: var(--z2-color);
+    text-align: var(--z2-align) !important;
+    font-weight: var(--z2-weight);
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+.value-highlight {
+    font-size: var(--z3-font-size);
+    color: var(--z3-color);
+    text-align: var(--z3-align) !important;
+    font-weight: var(--z3-weight);
+    letter-spacing: 0.5px;
+}
+
+.issuer-title {
+    font-size: var(--z4-font-size);
+    color: var(--z4-color);
+    text-align: var(--z4-align) !important;
+    font-weight: var(--z4-weight);
+    padding-left: 10px !important;
+}
+
+.modern-quote-table .bottom-section .align-middle {
+    font-size: var(--z5-font-size);
+    color: var(--z5-color);
+    text-align: var(--z5-align) !important;
+    font-weight: var(--z5-weight);
+    padding-left: 10px !important;
+}
+
+.modern-quote-table .stock-name {
+    font-size: var(--z6-font-size);
+    color: var(--z6-color);
+    text-align: var(--z6-align) !important;
+    font-weight: var(--z6-weight);
+    padding-left: 10px !important;
+}
+
+.modern-quote-table .bottom-section .label-zh:not(.align-middle) {
+    font-size: var(--z7-font-size);
+    color: var(--z7-color);
+    text-align: var(--z7-align) !important;
+    font-weight: var(--z7-weight);
+}
+
+.modern-quote-table .val-sub {
+    font-size: var(--z7-font-size);
+    color: var(--z7-color);
+    text-align: var(--z7-align) !important;
+    font-weight: var(--z7-weight);
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+.modern-quote-table .num-val {
+    font-size: var(--z8-font-size);
+    color: var(--z8-color);
+    text-align: var(--z8-align) !important;
+    font-weight: var(--z8-weight);
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+.modern-quote-table .bottom-section td:nth-child(n+3) {
+    width: var(--z-col-width) !important;
+}
+
+/* =========================================
+   手機版響應式修正 (RWD)
+   ========================================= */
+@media (max-width: 1100px) {
+    .stock-columns {
+        grid-template-columns: repeat(3, minmax(130px, 1fr));
+    }
+}
+
+@media (max-width: 900px) {
+    .stock-columns {
+        grid-template-columns: repeat(2, minmax(130px, 1fr));
+    }
+}
+
+@media (max-width: 600px) {
+    .stock-columns {
+        grid-template-columns: 1fr;
+    }
+}

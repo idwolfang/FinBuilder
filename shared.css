@@ -1,0 +1,234 @@
+﻿* {
+    box-sizing: border-box;
+}
+
+/* ╔══════════════════════════╗
+   ║       網站外觀控制台（修改這裡即可）         ║
+   ║  所有顏色、字體、尺寸集中在此，下方 CSS 自動連動  ║
+   ╚══════════════════════════╝ */
+:root {
+    --color-dark: #101a2e;
+    --color-primary: #1f3d73;
+    --color-primary-hover: #28509a;
+    --color-primary-deep: #162c54;
+    --color-text: #0f1b33;
+    --color-text-mid: #17233d;
+    --color-text-sub: #22365e;
+    --color-text-muted: #576785;
+    --color-text-faint: #7a8ea3;
+    --color-text-ghost: #94a3b8;
+    --color-nav-link: #d9e4f5;
+    --color-bg-page: #f1f4f8;
+    --color-bg-modal: #f8fafc;
+    --color-border-panel: #d7dde8;
+    --color-border-input: #cbd3df;
+    --color-border-close: #cbd5e1;
+    --color-border-img: #e2e8f0;
+    --color-accent-red: #dc2626;
+    --font-family: "Microsoft JhengHei", Arial, sans-serif;
+    --font-size-ui: 14px;
+    --font-size-sm: 13px;
+    --font-size-xs: 12px;
+    --font-size-nav-brand: 18px;
+    --font-size-panel-h2: 16px;
+    --font-size-section-h3: 15px;
+    --font-size-stock-h4: 14px;
+    --radius-panel: 8px;
+    --radius-input: 6px;
+    --radius-modal: 16px;
+    --radius-modal-btn: 21px;
+    --radius-badge: 4px;
+    --height-topbar: 48px;
+    --height-input: 36px;
+    --height-modal-btn: 42px;
+    --padding-layout: 24px;
+    --padding-panel-h2: 14px 18px;
+    --height-panel-h2: 46px;
+    --padding-input: 0 12px;
+    --padding-section: 4px 18px 0;
+    --shadow-panel: 0 2px 8px rgba(15, 27, 51, 0.08);
+    --shadow-modal: 0 20px 40px rgba(0, 0, 0, 0.4);
+    --shadow-btn: 0 4px 12px rgba(31, 61, 115, 0.15);
+}
+
+body {
+    margin: 0;
+    font-family: var(--font-family);
+    background: var(--color-bg-page);
+    color: var(--color-text);
+}
+
+/* =========================================
+   導覽列
+   ========================================= */
+.topbar {
+    height: var(--height-topbar);
+    background: var(--color-dark);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 0 var(--padding-layout);
+}
+
+.brand {
+    color: white;
+    font-weight: 700;
+    font-size: var(--font-size-nav-brand);
+    margin-right: 16px;
+    white-space: nowrap;
+}
+
+.topbar a {
+    color: var(--color-nav-link);
+    text-decoration: none;
+    font-size: var(--font-size-ui);
+    padding: 13px 12px;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+    .topbar a.active {
+        background: var(--color-primary);
+        color: white;
+        border-radius: var(--radius-badge);
+    }
+
+    .topbar a.nav-disabled {
+        color: var(--color-text-muted);
+        pointer-events: none;
+    }
+
+.status-badge {
+    font-size: 10px;
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--color-text-faint);
+    padding: 1px 5px;
+    border-radius: var(--radius-badge);
+    font-weight: normal;
+}
+
+/* =========================================
+   主版面與控制面板
+   ========================================= */
+.layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(320px, 0.9fr);
+    gap: var(--padding-layout);
+    padding: var(--padding-layout);
+}
+
+.panel {
+    background: white;
+    border: 1px solid var(--color-border-panel);
+    border-radius: var(--radius-panel);
+    box-shadow: var(--shadow-panel);
+    padding-bottom: 20px;
+}
+
+    .panel h2 {
+        margin: 0;
+        padding: var(--padding-panel-h2);
+        height: var(--height-panel-h2);
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        background: var(--color-dark);
+        color: white;
+        font-size: var(--font-size-panel-h2);
+        border-radius: var(--radius-panel) var(--radius-panel) 0 0;
+    }
+
+/* =========================================
+   表單共用元件
+   ========================================= */
+button {
+    height: var(--height-input);
+    padding: 0 18px;
+    border: 0;
+    border-radius: var(--radius-input);
+    background: var(--color-primary);
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+    button:hover {
+        background: var(--color-primary-hover);
+    }
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(180px, 1fr));
+    gap: 18px 24px;
+    padding: 18px;
+}
+
+.field label {
+    display: block;
+    margin: 0 0 8px;
+    font-size: var(--font-size-ui);
+    color: var(--color-text-mid);
+}
+
+.field select, .field input {
+    width: 100%;
+    height: var(--height-input);
+    margin: 0;
+    border: 1px solid var(--color-border-input);
+    border-radius: var(--radius-input);
+    padding: var(--padding-input);
+    background: white;
+    color: var(--color-text);
+    font-size: var(--font-size-ui);
+}
+
+/* =========================================
+   頁尾版權聲明
+   ========================================= */
+.site-footer {
+    background: var(--color-dark);
+    color: var(--color-text-faint);
+    text-align: center;
+    font-size: var(--font-size-sm);
+    padding: 14px var(--padding-layout);
+    letter-spacing: 0.3px;
+    line-height: 1.6;
+}
+
+/* =========================================
+   手機版響應式修正 (RWD)
+   ========================================= */
+@media (max-width: 1100px) {
+    .form-grid {
+        grid-template-columns: repeat(2, minmax(160px, 1fr));
+    }
+}
+
+@media (max-width: 900px) {
+    .layout {
+        grid-template-columns: 1fr;
+    }
+
+    .topbar {
+        height: auto;
+        min-height: var(--height-topbar);
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding: 0 16px;
+        gap: 8px;
+        -webkit-overflow-scrolling: touch;
+    }
+
+        .topbar a {
+            padding: 12px 8px;
+            font-size: var(--font-size-sm);
+        }
+}
+
+@media (max-width: 600px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+}
