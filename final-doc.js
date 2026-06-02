@@ -390,6 +390,8 @@ bindFdButton('fd-downloadPng', '⬇ 下載 PNG', generateImage);
 // ----------------------------------------------------------------
 // 開發用：預設填入測試數值（正式上線前可整段刪除）
 // ----------------------------------------------------------------
+
+/*
 (function prefillFdForm() {
     var defaults = {
         'fd-sn': '2026SN2228',
@@ -410,3 +412,4 @@ bindFdButton('fd-downloadPng', '⬇ 下載 PNG', generateImage);
     var issuerEl = document.getElementById('fd-issuer');
     if (issuerEl) issuerEl.value = 'DBS';
 })();
+*/
