@@ -4,11 +4,14 @@
    ================================================================ */
 
 var FD_STYLE = {
-    bodyPt: 12,    // body 文字大小（pt）
-    h2Pt: 14,    // 標題大小（pt）
-    marginVCm: 1.5,  // 上下邊界（cm）
-    marginHCm: 1.5,  // 左右邊界（cm）
+    bodyPt: 12,
+    h2Pt: 14,
+    marginVCm: 1.27,  // 上下邊界（cm）
+    marginHCm: 1.27,  // 左右邊界（cm）
+    lineHeight: 1.4,   // 行高（Word / PNG 共用）
+    paraSpacePt: 2,    // 段落上下間距（pt，Word 用）
 };
+
 FD_STYLE._bodyPx = Math.round(FD_STYLE.bodyPt * 1.333);
 FD_STYLE._h2Px = Math.round(FD_STYLE.h2Pt * 1.333);
 FD_STYLE._marginVPx = Math.round(FD_STYLE.marginVCm / 2.54 * 96);
@@ -216,9 +219,9 @@ async function generateWord(data) {
     var content = buildDocumentHtml(data);
     var fullHtml = '<!DOCTYPE html><html><head><meta charset="UTF-8"><style>' +
         'body{font-family:"微軟正黑體","Microsoft JhengHei",sans-serif;' +
-        'font-size:' + FD_STYLE.bodyPt + 'pt;line-height:1.7;color:#111;}' +
+        'font-size:' + FD_STYLE.bodyPt + 'pt;line-height:' + FD_STYLE.lineHeight + ';color:#111;}' +
         'h2{font-size:' + FD_STYLE.h2Pt + 'pt;font-weight:bold;margin:0 0 8pt;}' +
-        'p{margin:3pt 0;}' +
+        'p{margin:' + FD_STYLE.paraSpacePt + 'pt 0;}' +
         'img{max-width:170mm;display:inline-block;}' +
         '</style></head><body>' + content + '</body></html>';
 
@@ -245,9 +248,9 @@ async function generateImage(data) {
     styleEl.textContent =
         '.fd-ci{padding:' + FD_STYLE._marginVPx + 'px ' + FD_STYLE._marginHPx + 'px;width:794px;box-sizing:border-box;' +
         'font-family:"微軟正黑體","Microsoft JhengHei",sans-serif;' +
-        'font-size:' + FD_STYLE._bodyPx + 'px;line-height:1.7;color:#111;}' +
-        '.fd-ci h2{font-size:' + FD_STYLE._h2Px + 'px;font-weight:bold;margin:0 0 11px;}' +
-        '.fd-ci p{margin:4px 0;}' +
+        'font-size:' + FD_STYLE._bodyPx + 'px;line-height:' + FD_STYLE.lineHeight + ';color:#111;}' +
+        '.fd-ci h2{font-size:' + FD_STYLE._h2Px + 'px;font-weight:bold;margin:0 0 ' + Math.round(FD_STYLE.paraSpacePt * 1.333 * 2) + 'px;}' +
+        '.fd-ci p{margin:' + Math.round(FD_STYLE.paraSpacePt * 1.333) + 'px 0;}' +
         '.fd-ci img{max-width:100%;display:block;margin:8px 0;}';
     container.appendChild(styleEl);
 
@@ -288,15 +291,15 @@ function buildDocumentHtml(data) {
 
     var couponBlock = data.productType === 'DAC'
         ? '<p>每月配息：於各交割日，發行機構將依下列計算公式以美元為計價單位給付：</p>' +
-        '<p>每月配息金額 = 商品面額 × 100% × <strong style="color:#c00000;">' + data.coupon + '%</strong> × (1/12)' +
+        '<p><strong>✤&emsp;每月配息金額</strong> = 商品面額 × 100% × <strong style="color:#c00000;">' + data.coupon + '%</strong> × (1/12)' +
         '（四捨五入至小數點後第 2 位）× (n/N)</p>' +
-        '<p>n = 所有連結標的之收盤價同時大於或等於其配息下層界線之觀察日天數</p>' +
-        '<p>N = 觀察期間的觀察日總數</p>' +
-        '<p><strong>配息觀察期間及配息交割日</strong></p>'
+        '<p><strong>✤&emsp;</strong>n = 所有連結標的之<u>收盤價同時大於或等於其配息下層界線</u>之觀察日天數</p>' +
+        '<p><strong>✤&emsp;</strong>N = 觀察期間的觀察日總數</p>' +
+        '<p><strong>✤&emsp;配息觀察期間及配息交割日</strong></p>'
         : '<p>每月固定配息：於各交割日，發行機構將依下列計算公式以美元為計價單位給付：</p>' +
-        '<p>每月配息金額 = 每單位商品面額 × <strong>' + data.coupon + '%</strong>' +
-        '（即年利率 ' + data.coupon + '%）</p>' +
-        '<p><strong>觀察期間及配息交割日：</strong></p>';
+        '<p><strong>✤&emsp;每月配息金額</strong> = 每單位商品面額 × <strong style="color:#c00000;">' + (Math.round(data.coupon / 12 * 100) / 100).toFixed(2) + '%</strong>' +
+        '（即年利率 <strong style="color:#c00000;">' + data.coupon + '%</strong>）</p>' +
+        '<p><strong>✤&emsp;觀察期間及配息交割日：</strong></p>';
 
     var stockImagesHtml = (data.imgStockList || []).map(function (src) {
         return '<p style="text-align:center;margin:8px 0;"><img src="' + src + '" style="max-width:100%;display:inline-block;" /></p>';
@@ -311,23 +314,24 @@ function buildDocumentHtml(data) {
         '<p><strong>記憶式自動提前出場價：</strong>對任一連結標的而言，其期初價 ' + data.ko + '%。</p>' +
         '<p><strong>執行價(轉換價)：</strong>對任一連結標的而言，其期初價之 <span style="color:#c00000;">' + data.strike + '%</span>。</p>' +
         ekiLine +
-        '<p><strong>連結標的：</strong></p>' +
+        '<p><strong><strong>✤&emsp;</strong>連結標的：</strong></p>' +
         stockImagesHtml +
         koTableBlock +
-        '<p><strong>商品年期：</strong>' + parseInt(data.tenor) + '個月' +
+        '<p><strong><strong>✤&emsp;</strong>商品年期：</strong>' + parseInt(data.tenor) + '個月' +
         '（本商品發生記憶式自動提前出場事件除外）</p>' +
-        '<p><strong>交易日：</strong>' + formatDate(data.tradeDate) + '</p>' +
-        '<p><strong>發行日：</strong>' + formatDate(data.issueDate) + '</p>' +
-        '<p><strong>到期日：</strong>' + formatDate(data.maturityDate) + '</p>' +
-        '<p><strong>記憶式自動提前出場事件：</strong>' +
+        '<p><strong><strong>✤&emsp;</strong>交易日：</strong>' + formatDate(data.tradeDate) + '</p>' +
+        '<p><strong><strong>✤&emsp;</strong>發行日：</strong>' + formatDate(data.issueDate) + '</p>' +
+        '<p><strong><strong>✤&emsp;</strong>到期日：</strong>' + formatDate(data.maturityDate) + '</p>' +
+        '<p><strong><strong>✤&emsp;</strong>記憶式自動提前出場事件</strong>：' +
         '<span style="color:#c00000;">' + formatDate(data.koStartDate) + '(含)</span>' +
         ' 起至期末評價日 ' +
-        '<span style="color:#1f3864;">' + formatDate(data.finalValDate) + '(含)</span>' +
-        '當所有連結標的之收盤價都曾經大於或等於其自動出場觸發水準，' +
+        '<span style="color:#1f3864;">' + formatDate(data.finalValDate) + '(含)</span></p>' +
+        '<p style="margin-left:2em;">當所有連結標的之收盤價都曾經大於或等於其自動出場觸發水準，' +
         '則本商品滿足記憶式自動提前出場條款。</p>' +
         couponBlock +
         scheduleImagesHtml +
-        '<p style="text-align:center;font-style:italic;margin-top:32px;color:#4472c4;font-size:12px;">' +
+        '<p style="text-align:center;font-style:italic;margin-top:32px;color:#4472c4;font-size:10pt;' +
+        'border-top:1px solid #4472c4;border-bottom:1px solid #4472c4;padding:4pt 0;">' +
         '上述資料均節錄自附件「中文產品說明書」，僅供投資人參考使用。</p>';
 }
 
