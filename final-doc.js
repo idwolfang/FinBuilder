@@ -270,7 +270,8 @@ async function generateImage(data) {
     styleEl.textContent =
         '.fd-ci{padding:' + FD_STYLE._marginVPx + 'px ' + FD_STYLE._marginHPx + 'px;width:794px;box-sizing:border-box;' +
         'font-family:"微軟正黑體","Microsoft JhengHei",sans-serif;' +
-        'font-size:' + FD_STYLE._bodyPx + 'px;line-height:' + FD_STYLE.lineHeight + ';color:#111;}' +
+        'font-size:' + FD_STYLE._bodyPx + 'px;line-height:' + FD_STYLE.lineHeight + ';color:#111;' +
+        '-webkit-text-size-adjust:none;text-size-adjust:none;}' +
         '.fd-ci h2{font-size:' + FD_STYLE._h2Px + 'px;font-weight:bold;margin:0 0 ' + Math.round(FD_STYLE.paraSpacePt * 1.333 * 2) + 'px;}' +
         '.fd-ci p{margin:' + Math.round(FD_STYLE.paraSpacePt * 1.333) + 'px 0;}' +
         '.fd-ci img{max-width:100%;display:block;margin:8px 0;}';
