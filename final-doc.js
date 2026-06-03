@@ -344,9 +344,9 @@ function buildDocumentHtml(data) {
         '<p><strong>✤&emsp;</strong>N = 觀察期間的觀察日總數</p>' +
         '<p><strong>✤&emsp;配息觀察期間及配息交割日</strong></p>'
         : '<p>每月固定配息：於各交割日，發行機構將依下列計算公式以美元為計價單位給付：</p>' +
-        '<p><strong>✤&emsp;每月配息金額</strong> = 每單位商品面額 × <strong style="color:#c00000;">' + (Math.round(data.coupon / 12 * 100) / 100).toFixed(2) + '%</strong>' +
-        '（即年利率 <strong style="color:#c00000;">' + data.coupon + '%</strong>）</p>' +
-        '<p><strong>✤&emsp;觀察期間及配息交割日：</strong></p>';
+        '<p><strong>✤&emsp;每月配息金額</strong> = 商品面額 × 100% × <strong style="color:#c00000;">' + data.coupon + '%</strong> × (1/12)' +
+        '（四捨五入至小數點後第 2 位）</p>' +
+        '<p><strong>✤&emsp;配息觀察期間及配息交割日：</strong></p>';
 
     var stockImagesHtml = (data.imgStockList || []).map(function (src) {
         return '<p style="text-align:center;margin:8px 0;"><img src="' + src + '" style="max-width:100%;display:inline-block;" /></p>';
@@ -358,7 +358,7 @@ function buildDocumentHtml(data) {
 
     return '<h2 style="color:#c00000;">' + escHtml(buildTitle(data)) + '</h2>' +
         '<p><strong>期初價：</strong>對任一連結標的而言，其交易日之價格。</p>' +
-        '<p><strong>記憶式自動提前出場價：</strong>對任一連結標的而言，其期初價 ' + data.ko + '%。</p>' +
+        '<p><strong>記憶式自動提前出場價：</strong>對任一連結標的而言，其期初價 ' + data.ko + '%' + (data.productType === 'STEPDOWN' && data.stepDown ? '後每月降 ' + data.stepDown + '%' : '') + '。</p>' +
         '<p><strong>執行價(轉換價)：</strong>對任一連結標的而言，其期初價之 <span style="color:#c00000;">' + data.strike + '%</span>。</p>' +
         ekiLine +
         '<p><strong><strong>✤&emsp;</strong>連結標的：</strong></p>' +
