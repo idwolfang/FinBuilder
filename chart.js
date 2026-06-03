@@ -55,14 +55,14 @@ async function generateChartForStock(symbol, name, strikePercent, koPercent) {
         yaxis: { domain: [0.3, 1], title: "Price (USD)", showgrid: true, gridcolor: "#eee" },
         yaxis2: { domain: [0, 0.25], title: "Volume", showgrid: false },
         legend: { x: 0, y: 1, bgcolor: "rgba(255,255,255,0.8)", borderwidth: 1 },
-        margin: { t: 50, r: 80, b: 40, l: 60 },
+        margin: { t: 50, r: 30, b: 40, l: 60 },
         annotations: [{
             x: dates[dates.length - 1], y: lastClose,
             xref: "x", yref: "y",
             text: `${lastClose}`,
             showarrow: false,
             font: { color: "#e05c5c", size: 12 },
-            xanchor: "left", xshift: 5
+            xanchor: "left", xshift: 10
         }],
         plot_bgcolor: "#fff",
         paper_bgcolor: "#fff"
@@ -214,7 +214,7 @@ function bindChartButton() {
             yaxis: { domain: [0.3, 1], title: "Price (USD)", showgrid: true, gridcolor: "#eee" },
             yaxis2: { domain: [0, 0.25], title: "Volume", showgrid: false },
             legend: { x: 0, y: 1, bgcolor: "rgba(255,255,255,0.8)", borderwidth: 1 },
-            margin: { t: 50, r: 80, b: 40, l: 60 },
+            margin: { t: 50, r: 30, b: 40, l: 60 },
             plot_bgcolor: "#fff", paper_bgcolor: "#fff"
         };
 

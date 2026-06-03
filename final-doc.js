@@ -264,7 +264,7 @@ async function generateImage(data) {
     var content = buildDocumentHtml(data);
 
     var container = document.createElement('div');
-    container.style.cssText = 'position:fixed;left:-9999px;top:0;width:794px;background:#fff;box-sizing:border-box;';
+    container.style.cssText = 'position:absolute;left:-9999px;top:0;width:794px;background:#fff;box-sizing:border-box;';
 
     var styleEl = document.createElement('style');
     styleEl.textContent =
@@ -389,6 +389,7 @@ function bindFdButton(btnId, label, handler) {
     var btn = document.getElementById(btnId);
     if (!btn) return;
     btn.addEventListener('click', async function () {
+        if (btn.disabled) return;
         var data = getFdFormData();
         var err = validateFdForm(data);
         if (err) { alert(err); return; }
