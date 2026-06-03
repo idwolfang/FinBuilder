@@ -283,14 +283,16 @@ async function generateImage(data) {
     container.appendChild(inner);
     document.body.appendChild(container);
 
-    try {
-        var canvas = await html2canvas(container, {
-            backgroundColor: '#ffffff',
-            scale: 2,
-            useCORS: true,
-            allowTaint: true,
-        });
-        var imageUrl = canvas.toDataURL('image/png');
+    var canvas = await html2canvas(container, {
+        backgroundColor: '#ffffff',
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        width: 794,
+        windowWidth: 794,
+    });
+
+    var imageUrl = canvas.toDataURL('image/png');
 
         var fdModal = document.getElementById('fdPreviewModal');
         var fdPreviewImg = document.getElementById('fdPreviewImg');
