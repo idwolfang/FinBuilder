@@ -419,7 +419,7 @@ bindFdButton('fd-downloadPng', '⬇ 下載 PNG', generateImage);
 // ----------------------------------------------------------------
 
 
-(function prefillFdForm() {
+/*(function prefillFdForm() {
     var defaults = {
         'fd-sn': '2026SN2228',
         'fd-coupon': '17.17',
@@ -444,4 +444,4 @@ bindFdButton('fd-downloadPng', '⬇ 下載 PNG', generateImage);
         typeEl.value = 'STEPDOWN';
         typeEl.dispatchEvent(new Event('change'));
     }
-})();
+})();*/
