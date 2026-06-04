@@ -1,4 +1,5 @@
 const API_URL = "https://finbuilder-api.onrender.com/api/price";
+fetch('https://finbuilder-api.onrender.com/api/price/AAPL?date=2026-01-01').catch(() => {});
 
 const quoteDateInput = document.querySelector("#quoteDate");
 const fetchPriceButton = document.querySelector("#fetchPrice");
