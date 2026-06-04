@@ -207,7 +207,7 @@ function formatDate(dateStr) {
 }
 
 function buildTitle(data) {
-    var prefixMap = { DAC: '（區間）', FCN: '（固定）', STEPDOWN: '（Stepdown固定）' };
+    var prefixMap = { DAC: '( 區間 )', FCN: '( 固定 )', STEPDOWN: '( Stepdown固定 )' };
     var typeMap = { DAC: '區間配息', FCN: '固定配息', STEPDOWN: '固定配息' };
     var prefix = prefixMap[data.productType] || '';
     var typeName = typeMap[data.productType] || '';
@@ -377,8 +377,9 @@ function buildDocumentHtml(data) {
         '<span style="color:#c00000;">' + formatDate(data.koStartDate) + '(含)</span>' +
         ' 起至期末評價日 ' +
         '<span style="color:#1f3864;">' + formatDate(data.finalValDate) + '(含)</span></p>' +
-        '<p>當所有連結標的之收盤價都曾經大於或等於其自動出場觸發水準，則本商品滿足記憶式自動提前出場條款。</p>' +
-        couponBlock +
+            '<p><strong style="color:#ffffff;">✤&emsp;</strong>當所有連結標的之收盤價都曾經大於或等於其自動出場觸發水準，則本商品滿足記憶式自動提</p>' +
+            '<p><strong style="color:#ffffff;">✤&emsp;</strong>前出場條款。</p>' +
+            couponBlock +
         scheduleImagesHtml +
         '<p style="text-align:center;font-style:italic;margin-top:32px;color:#4472c4;font-size:10pt;' +
         'border-top:1px solid #4472c4;border-bottom:1px solid #4472c4;padding:4pt 0;">' +
@@ -418,7 +419,7 @@ bindFdButton('fd-downloadPng', '⬇ 下載 PNG', generateImage);
 // ----------------------------------------------------------------
 
 
-/*(function prefillFdForm() {
+(function prefillFdForm() {
     var defaults = {
         'fd-sn': '2026SN2228',
         'fd-coupon': '17.17',
@@ -443,4 +444,4 @@ bindFdButton('fd-downloadPng', '⬇ 下載 PNG', generateImage);
         typeEl.value = 'STEPDOWN';
         typeEl.dispatchEvent(new Event('change'));
     }
-})();*/
+})();
