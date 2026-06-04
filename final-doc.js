@@ -283,16 +283,17 @@ async function generateImage(data) {
     container.appendChild(inner);
     document.body.appendChild(container);
 
-    var canvas = await html2canvas(container, {
-        backgroundColor: '#ffffff',
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        width: 794,
-        windowWidth: 794,
-    });
+    try {
+        var canvas = await html2canvas(container, {
+            backgroundColor: '#ffffff',
+            scale: 2,
+            useCORS: true,
+            allowTaint: true,
+            width: 794,
+            windowWidth: 794,
+        });
 
-    var imageUrl = canvas.toDataURL('image/png');
+        var imageUrl = canvas.toDataURL('image/png');
 
         var fdModal = document.getElementById('fdPreviewModal');
         var fdPreviewImg = document.getElementById('fdPreviewImg');
@@ -341,14 +342,14 @@ function buildDocumentHtml(data) {
 
     var couponBlock = data.productType === 'DAC'
         ? '<p>每月配息：於各交割日，發行機構將依下列計算公式以美元為計價單位給付：</p>' +
-        '<p><strong>✤&emsp;每月配息金額</strong> = 商品面額 × 100% × <strong style="color:#c00000;">' + data.coupon + '%</strong> × (1/12)' +
-        '（四捨五入至小數點後第 2 位）× (n/N)</p>' +
+        '<p><strong>✤&emsp;每月配息金額</strong> = 商品面額 × 100% × <strong style="color:#c00000;">' + parseFloat(data.coupon).toFixed(4) + '%</strong> × (1/12)' +
+        '（四捨五入至小數點後第 4 位）× (n/N)</p>' +
         '<p><strong>✤&emsp;</strong>n = 所有連結標的之<u>收盤價同時大於或等於其配息下層界線</u>之觀察日天數</p>' +
         '<p><strong>✤&emsp;</strong>N = 觀察期間的觀察日總數</p>' +
         '<p><strong>✤&emsp;配息觀察期間及配息交割日</strong></p>'
         : '<p>每月固定配息：於各交割日，發行機構將依下列計算公式以美元為計價單位給付：</p>' +
-        '<p><strong>✤&emsp;每月配息金額</strong> = 商品面額 × 100% × <strong style="color:#c00000;">' + data.coupon + '%</strong> × (1/12)' +
-        '（四捨五入至小數點後第 2 位）</p>' +
+        '<p><strong>✤&emsp;每月配息金額</strong> = 商品面額 × 100% × <strong style="color:#c00000;">' + parseFloat(data.coupon).toFixed(4) + '%</strong> × (1/12)' +
+        '（四捨五入至小數點後第 4 位）</p>' +
         '<p><strong>✤&emsp;配息觀察期間及配息交割日：</strong></p>';
 
     var stockImagesHtml = (data.imgStockList || []).map(function (src) {
@@ -359,7 +360,7 @@ function buildDocumentHtml(data) {
         return '<p style="text-align:center;margin:8px 0;"><img src="' + src + '" style="max-width:100%;display:inline-block;" /></p>';
     }).join('');
 
-    return '<h2 style="color:#c00000;">' + escHtml(buildTitle(data)) + '</h2>' +
+        return '<h2 style="color:#c00000;text-align:center;font-size:20px;margin-bottom:16px;">' + escHtml(buildTitle(data)) + '</h2>' +
         '<p><strong>期初價：</strong>對任一連結標的而言，其交易日之價格。</p>' +
         '<p><strong>記憶式自動提前出場價：</strong>對任一連結標的而言，其期初價 ' + data.ko + '%' + (data.productType === 'STEPDOWN' && data.stepDown ? '後每月降 ' + data.stepDown + '%' : '') + '。</p>' +
         '<p><strong>執行價(轉換價)：</strong>對任一連結標的而言，其期初價之 <span style="color:#c00000;">' + data.strike + '%</span>。</p>' +
@@ -376,8 +377,7 @@ function buildDocumentHtml(data) {
         '<span style="color:#c00000;">' + formatDate(data.koStartDate) + '(含)</span>' +
         ' 起至期末評價日 ' +
         '<span style="color:#1f3864;">' + formatDate(data.finalValDate) + '(含)</span></p>' +
-        '<p style="margin-left:2em;">當所有連結標的之收盤價都曾經大於或等於其自動出場觸發水準，' +
-        '則本商品滿足記憶式自動提前出場條款。</p>' +
+        '<p>當所有連結標的之收盤價都曾經大於或等於其自動出場觸發水準，則本商品滿足記憶式自動提前出場條款。</p>' +
         couponBlock +
         scheduleImagesHtml +
         '<p style="text-align:center;font-style:italic;margin-top:32px;color:#4472c4;font-size:10pt;' +
@@ -418,13 +418,14 @@ bindFdButton('fd-downloadPng', '⬇ 下載 PNG', generateImage);
 // ----------------------------------------------------------------
 
 
-/*(function prefillFdForm() {
+(function prefillFdForm() {
     var defaults = {
         'fd-sn': '2026SN2228',
         'fd-coupon': '17.17',
         'fd-ko': '96',
         'fd-strike': '80',
         'fd-eki': '60',
+        'fd-stepDown': '3',
         'fd-tradeDate': '2026-05-06',
         'fd-issueDate': '2026-05-13',
         'fd-maturityDate': '2026-11-17',
@@ -437,4 +438,9 @@ bindFdButton('fd-downloadPng', '⬇ 下載 PNG', generateImage);
     });
     var issuerEl = document.getElementById('fd-issuer');
     if (issuerEl) issuerEl.value = 'DBS';
-})();*/
+    var typeEl = document.getElementById('fd-productType');
+    if (typeEl) {
+        typeEl.value = 'STEPDOWN';
+        typeEl.dispatchEvent(new Event('change'));
+    }
+})();
