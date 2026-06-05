@@ -165,12 +165,19 @@ async function fetchPricesForStocks(stocks) {
         priceStatus.innerHTML = results
             .map(item => {
                 if (!item.close || Number(item.close) === 0) {
-                    return `${item.symbol} 參考進場價：<span style="color:#dc2626;">Yahoo Finance 資料異常，請重新抓取或稍後再試！</span>`;
+                    return `${item.symbol} 參考進場價：<span style="color:#dc2626;">資料異常</span>
+                <input type="number" step="0.01" placeholder="請手動輸入收盤價"
+                    id="manual_${item.symbol}"
+                    style="margin-left:8px; width:120px; padding:2px 6px; border:1px solid #dc2626; border-radius:4px;"
+                    onchange="updateManualPrice('${item.symbol}', this.value)" />`;
                 }
                 return `${item.symbol} 參考進場價：${item.close}`;
             })
             .join("<br>");
+
+        window._lastPriceResults = results;
         return results;
+
     } catch (error) {
         priceStatus.textContent = error.message;
         return null;
@@ -394,3 +401,12 @@ document.getElementById("addCustomStock").addEventListener("click", () => {
     nameInput.value = "";
     symbolInput.focus();
 });
+
+function updateManualPrice(symbol, value) {
+    const price = Number(value);
+    if (price > 0) {
+        // 更新 priceResults 裡對應的 close
+        const item = window._lastPriceResults?.find(r => r.symbol === symbol);
+        if (item) item.close = price.toFixed(2);
+    }
+}
