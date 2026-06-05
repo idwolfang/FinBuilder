@@ -28,16 +28,97 @@
         <section class="panel">
             <h2>報價圖片產生器</h2>
 
+            <!-- ① 報價日期 -->
             <div class="date-wrapper">
                 <label>報價日期</label>
                 <input id="quoteDate" type="date" />
-                <button id="fetchPrice" type="button">抓取參考進場價</button>
                 <p id="wakeStatus" style="font-size:12px;color:#d97706;margin-top:6px;">⏳ 後端喚醒中...</p>
-                <p style="font-size:12px;color:#6b7280;margin-top:4px;">以下為前一交易日收盤價</p>
+            </div>
+
+            <!-- ② 連結標的勾選 -->
+            <div class="underlyings">
+                <h3>連結標的（勾選）</h3>
+
+                <div class="stock-columns">
+                    <div>
+                        <h4>半導體</h4>
+                        <label><input type="checkbox" name="stock" value="AMD" data-name="超微" /> AMD 超微</label>
+                        <label><input type="checkbox" name="stock" value="ARM" data-name="安謀" /> ARM 安謀</label>
+                        <label><input type="checkbox" name="stock" value="ASML" data-name="艾司摩爾" /> ASML 艾司摩爾</label>
+                        <label><input type="checkbox" name="stock" value="AVGO" data-name="博通" /> AVGO 博通</label>
+                        <label><input type="checkbox" name="stock" value="INTC" data-name="英特爾" /> INTC 英特爾</label>
+                        <label><input type="checkbox" name="stock" value="MU" data-name="美光" /> MU 美光</label>
+                        <label><input type="checkbox" name="stock" value="NVDA" data-name="輝達" /> NVDA 輝達</label>
+                        <label><input type="checkbox" name="stock" value="QCOM" data-name="高通" /> QCOM 高通</label>
+                        <label><input type="checkbox" name="stock" value="SMCI" data-name="超微電腦" /> SMCI 超微電腦</label>
+                        <label><input type="checkbox" name="stock" value="TSM" data-name="台積電" /> TSM 台積電</label>
+                    </div>
+
+                    <div>
+                        <h4>科技</h4>
+                        <label><input type="checkbox" name="stock" value="AAPL" data-name="蘋果" /> AAPL 蘋果</label>
+                        <label><input type="checkbox" name="stock" value="AMZN" data-name="亞馬遜" /> AMZN 亞馬遜</label>
+                        <label><input type="checkbox" name="stock" value="CRM" data-name="賽富時" /> CRM 賽富時</label>
+                        <label><input type="checkbox" name="stock" value="GOOG" data-name="谷歌" /> GOOG 谷歌</label>
+                        <label><input type="checkbox" name="stock" value="GOOGL" data-name="谷歌" /> GOOGL 谷歌</label>
+                        <label><input type="checkbox" name="stock" value="META" data-name="臉書" /> META 臉書</label>
+                        <label><input type="checkbox" name="stock" value="MSFT" data-name="微軟" /> MSFT 微軟</label>
+                        <label><input type="checkbox" name="stock" value="MSTR" data-name="微策略" /> MSTR 微策略</label>
+                        <label><input type="checkbox" name="stock" value="NFLX" data-name="網飛" /> NFLX 網飛</label>
+                        <label><input type="checkbox" name="stock" value="ORCL" data-name="甲骨文" /> ORCL 甲骨文</label>
+                        <label><input type="checkbox" name="stock" value="TSLA" data-name="特斯拉" /> TSLA 特斯拉</label>
+                    </div>
+
+                    <div>
+                        <h4>金融/其他</h4>
+                        <label><input type="checkbox" name="stock" value="AA" data-name="美國鋁業" /> AA 美國鋁業</label>
+                        <label><input type="checkbox" name="stock" value="AAL" data-name="美國航空" /> AAL 美國航空</label>
+                        <label><input type="checkbox" name="stock" value="BA" data-name="波音" /> BA 波音</label>
+                        <label><input type="checkbox" name="stock" value="CCL" data-name="嘉年華" /> CCL 嘉年華</label>
+                        <label><input type="checkbox" name="stock" value="COIN" data-name="幣安所" /> COIN 幣安所</label>
+                        <label><input type="checkbox" name="stock" value="DIS" data-name="迪士尼" /> DIS 迪士尼</label>
+                        <label><input type="checkbox" name="stock" value="F" data-name="福特" /> F 福特</label>
+                        <label><input type="checkbox" name="stock" value="GS" data-name="高盛" /> GS 高盛</label>
+                        <label><input type="checkbox" name="stock" value="JPM" data-name="摩根大通" /> JPM 摩根大通</label>
+                        <label><input type="checkbox" name="stock" value="NKE" data-name="耐吉" /> NKE 耐吉</label>
+                        <label><input type="checkbox" name="stock" value="PLTR" data-name="帕蘭提爾" /> PLTR 帕蘭提爾</label>
+                        <label><input type="checkbox" name="stock" value="PYPL" data-name="貝寶" /> PYPL 貝寶</label>
+                        <label><input type="checkbox" name="stock" value="SOFI" data-name="索飛" /> SOFI 索飛</label>
+                        <label><input type="checkbox" name="stock" value="UBER" data-name="優步" /> UBER 優步</label>
+                        <label><input type="checkbox" name="stock" value="UNH" data-name="聯合健康" /> UNH 聯合健康</label>
+                        <label><input type="checkbox" name="stock" value="VST" data-name="維斯達公司" /> VST 維斯達公司</label>
+                    </div>
+
+                    <div>
+                        <h4>ETF</h4>
+                        <label><input type="checkbox" name="stock" value="QQQ" data-name="納斯達克" /> QQQ 納斯達克ETF</label>
+                        <label><input type="checkbox" name="stock" value="VOO" data-name="S&P500" /> VOO S&P500ETF</label>
+                        <label><input type="checkbox" name="stock" value="SPY" data-name="S&P500" /> SPY S&P500ETF</label>
+                        <label><input type="checkbox" name="stock" value="SMH" data-name="半導體" /> SMH 半導體ETF</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ③ 自訂標的 -->
+            <div class="underlyings">
+                <h3>自訂標的</h3>
+                <div class="custom-stock-add">
+                    <input id="customSymbol" type="text" placeholder="代號（如：RBLX）" maxlength="10" />
+                    <input id="customName" type="text" placeholder="名稱（如：機器磚塊）" maxlength="20" />
+                    <button id="addCustomStock" type="button">＋ 新增</button>
+                </div>
+                <div id="customStockList" class="stock-columns" style="margin-top: 12px;"></div>
+            </div>
+
+            <!-- ④ 抓取參考進場價 -->
+            <div class="date-wrapper" style="margin-top:16px;">
+                <button id="fetchPrice" type="button">抓取參考進場價</button>
+                <p id="priceLabel" style="font-size:12px;color:#6b7280;margin-top:4px;display:none !important;">以下為前一交易日收盤價</p>
             </div>
 
             <p id="priceStatus"></p>
 
+            <!-- ⑤ 商品條件表單 -->
             <div class="form-grid">
                 <div class="field">
                     <label>商品類型</label>
@@ -119,7 +200,6 @@
                     <label>記憶式</label>
                     <select id="memoryKo">
                         <option value="-" selected>-</option>
-
                         <option value="每日記憶">每日記憶</option>
                         <option value="每月記憶">每月記憶</option>
                     </select>
@@ -147,83 +227,12 @@
                 </div>
             </div>
 
-            <div class="underlyings">
-                <h3>連結標的（勾選）</h3>
-
-                <div class="stock-columns">
-                    <div>
-                        <h4>半導體</h4>
-                        <label><input type="checkbox" name="stock" value="AMD" data-name="超微" /> AMD 超微</label>
-                        <label><input type="checkbox" name="stock" value="ARM" data-name="安謀" /> ARM 安謀</label>
-                        <label><input type="checkbox" name="stock" value="ASML" data-name="艾司摩爾" /> ASML 艾司摩爾</label>
-                        <label><input type="checkbox" name="stock" value="AVGO" data-name="博通" /> AVGO 博通</label>
-                        <label><input type="checkbox" name="stock" value="INTC" data-name="英特爾" /> INTC 英特爾</label>
-                        <label><input type="checkbox" name="stock" value="MU" data-name="美光" /> MU 美光</label>
-                        <label><input type="checkbox" name="stock" value="NVDA" data-name="輝達" /> NVDA 輝達</label>
-                        <label><input type="checkbox" name="stock" value="QCOM" data-name="高通" /> QCOM 高通</label>
-                        <label><input type="checkbox" name="stock" value="SMCI" data-name="超微電腦" /> SMCI 超微電腦</label>
-                        <label><input type="checkbox" name="stock" value="TSM" data-name="台積電" /> TSM 台積電</label>
-                    </div>
-
-                    <div>
-                        <h4>科技</h4>
-                        <label><input type="checkbox" name="stock" value="AAPL" data-name="蘋果" /> AAPL 蘋果</label>
-                        <label><input type="checkbox" name="stock" value="AMZN" data-name="亞馬遜" /> AMZN 亞馬遜</label>
-                        <label><input type="checkbox" name="stock" value="CRM" data-name="賽富時" /> CRM 賽富時</label>
-                        <label><input type="checkbox" name="stock" value="GOOG" data-name="谷歌" /> GOOG 谷歌</label>
-                        <label><input type="checkbox" name="stock" value="GOOGL" data-name="谷歌" /> GOOGL 谷歌</label>
-                        <label><input type="checkbox" name="stock" value="META" data-name="臉書" /> META 臉書</label>
-                        <label><input type="checkbox" name="stock" value="MSFT" data-name="微軟" /> MSFT 微軟</label>
-                        <label><input type="checkbox" name="stock" value="MSTR" data-name="微策略" /> MSTR 微策略</label>
-                        <label><input type="checkbox" name="stock" value="NFLX" data-name="網飛" /> NFLX 網飛</label>
-                        <label><input type="checkbox" name="stock" value="ORCL" data-name="甲骨文" /> ORCL 甲骨文</label>
-                        <label><input type="checkbox" name="stock" value="TSLA" data-name="特斯拉" /> TSLA 特斯拉</label>
-                    </div>
-
-                    <div>
-                        <h4>金融/其他</h4>
-                        <label><input type="checkbox" name="stock" value="AA" data-name="美國鋁業" /> AA 美國鋁業</label>
-                        <label><input type="checkbox" name="stock" value="AAL" data-name="美國航空" /> AAL 美國航空</label>
-                        <label><input type="checkbox" name="stock" value="BA" data-name="波音" /> BA 波音</label>
-                        <label><input type="checkbox" name="stock" value="CCL" data-name="嘉年華" /> CCL 嘉年華</label>
-                        <label><input type="checkbox" name="stock" value="COIN" data-name="幣安所" /> COIN 幣安所</label>
-                        <label><input type="checkbox" name="stock" value="DIS" data-name="迪士尼" /> DIS 迪士尼</label>
-                        <label><input type="checkbox" name="stock" value="F" data-name="福特" /> F 福特</label>
-                        <label><input type="checkbox" name="stock" value="GS" data-name="高盛" /> GS 高盛</label>
-                        <label><input type="checkbox" name="stock" value="JPM" data-name="摩根大通" /> JPM 摩根大通</label>
-                        <label><input type="checkbox" name="stock" value="NKE" data-name="耐吉" /> NKE 耐吉</label>
-                        <label><input type="checkbox" name="stock" value="PLTR" data-name="帕蘭提爾" /> PLTR 帕蘭提爾</label>
-                        <label><input type="checkbox" name="stock" value="PYPL" data-name="貝寶" /> PYPL 貝寶</label>
-                        <label><input type="checkbox" name="stock" value="SOFI" data-name="索飛" /> SOFI 索飛</label>
-                        <label><input type="checkbox" name="stock" value="UBER" data-name="優步" /> UBER 優步</label>
-                        <label><input type="checkbox" name="stock" value="UNH" data-name="聯合健康" /> UNH 聯合健康</label>
-                        <label><input type="checkbox" name="stock" value="VST" data-name="維斯達公司" /> VST 維斯達公司</label>
-                    </div>
-
-                    <div>
-                        <h4>ETF</h4>
-                        <label><input type="checkbox" name="stock" value="QQQ" data-name="納斯達克" /> QQQ 納斯達克ETF</label>
-                        <label><input type="checkbox" name="stock" value="VOO" data-name="S&P500" /> VOO S&P500ETF</label>
-                        <label><input type="checkbox" name="stock" value="SPY" data-name="S&P500" /> SPY S&P500ETF</label>
-                        <label><input type="checkbox" name="stock" value="SMH" data-name="半導體" /> SMH 半導體ETF</label>
-                    </div>
-                </div>
+            <!-- ⑥ 產生按鈕 -->
+            <div>
+                <button id="generateQuote" type="button">產生報價圖片</button>
+                <button id="generateChart" type="button">產生報價線圖<span class="status-badge">Test</span></button>
+                <p id="generateStatus" style="font-size:12px; color:#16a34a; margin-top:6px; margin-left:18px;"></p>
             </div>
-
-            <div class="underlyings">
-                <h3>自訂標的</h3>
-                <div class="custom-stock-add">
-                    <input id="customSymbol" type="text" placeholder="代號（如：RBLX）" maxlength="10" />
-                    <input id="customName" type="text" placeholder="名稱（如：機器磚塊）" maxlength="20" />
-                    <button id="addCustomStock" type="button">＋ 新增</button>
-                </div>
-                <div id="customStockList" class="stock-columns" style="margin-top: 12px;">
-                    <!-- 動態產生的自訂標的勾選格會出現在這裡 -->
-                </div>
-            </div>
-
-            <button id="generateQuote" type="button">產生報價圖片</button>
-            <button id="generateChart" type="button">產生報價線圖<span class="status-badge">Test</span></button>
 
             <div class="offscreen-container">
                 <div id="quotePreview" class="quote-preview"></div>
@@ -234,10 +243,11 @@
         <aside class="quote-help">
             <h2>使用說明</h2>
             <ol>
-                <li>填入 Strike、KO、Coupon 等參數</li>
+                <li>選擇報價日期</li>
                 <li>勾選連結標的</li>
-                <li>點擊產生報價圖片</li>
-                <li>系統將自動帶入前一交易日收盤價作為參考進場價</li>
+                <li>點擊「抓取參考進場價」</li>
+                <li>確認股價後填入商品條件</li>
+                <li>點擊「產生報價圖片」</li>
             </ol>
         </aside>
     </main>
@@ -431,7 +441,7 @@
     </main>
 
     <footer class="site-footer">
-        © 2026 cyfang｜All rights reserved．本工具由 cyfang 獨立開發，未經授權禁止商業使用．回報問題請<a href="mailto:kennyxo@gmail.com">點此反映</a>．2026/06/04
+        © 2026 cyfang｜All rights reserved．本工具由 cyfang 獨立開發，未經授權禁止商業使用．回報問題請<a href="mailto:kennyxo@gmail.com">點此反映</a>．2026/06/05
     </footer>
 
     <div id="previewModal" class="modal-overlay">
@@ -475,7 +485,6 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/html-docx-js/dist/html-docx.js"></script>
     <script src="core.js"></script>
     <script src="quote.js"></script>

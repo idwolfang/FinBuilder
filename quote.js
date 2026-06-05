@@ -66,13 +66,14 @@ generateQuoteButton.addEventListener("click", async () => {
     const form = getQuoteForm();
     if (!form) return;
 
-    priceStatus.textContent = "正在抓取股價與產出報價單...";
+    if (!window._lastPriceResults || window._lastPriceResults.length === 0) {
+        priceStatus.textContent = "請先點擊「抓取參考進場價」。";
+        return;
+    }
 
-    const priceResults = await fetchPricesForStocks(checkedStocks);
-    if (!priceResults || priceResults.length === 0) return;
-
-    // 將 HTML 繪製到畫面外的隱藏容器
+    const priceResults = window._lastPriceResults;
     renderQuote(form, priceResults);
+
 
     // 稍微延遲讓 DOM 更新渲染完成
     setTimeout(async () => {
@@ -90,7 +91,9 @@ generateQuoteButton.addEventListener("click", async () => {
             // 將圖片塞入燈箱並顯示
             previewImg.src = imageUrl;
             modal.classList.add("active");
-            priceStatus.textContent = "報價圖片已產生，請於畫面上方預覽或下載。";
+            // 不覆蓋 priceStatus，改用獨立提示
+            const generateStatus = document.getElementById("generateStatus");
+            if (generateStatus) generateStatus.textContent = "✅ 報價圖片已產生，請於畫面上方預覽或下載。";
 
         } catch (error) {
             priceStatus.textContent = "產生圖片失敗，請重新整理後再試一次。";
@@ -162,15 +165,23 @@ async function fetchPricesForStocks(stocks) {
             await new Promise(r => setTimeout(r, 200)); // 每支間隔 200ms
         }
 
+        const priceLabel = document.getElementById("priceLabel");
+        if (priceLabel) {
+            const tradeDate = results.find(r => r.tradeDate)?.tradeDate?.replace(/-/g, '/') || '';
+            priceLabel.textContent = `以下為前一交易日${tradeDate ? `（${tradeDate}）` : ''}收盤價`;
+            priceLabel.style.setProperty("display", "block", "important");
+        }
+
         priceStatus.innerHTML = results
             .map(item => {
                 if (!item.close || Number(item.close) === 0) {
-                    return `${item.symbol} 參考進場價：<span style="color:#dc2626;">資料異常</span>
-                <input type="number" step="0.01" placeholder="請手動輸入收盤價"
+                    return `${item.symbol} 參考進場價：
+                    <input type="number" step="0.01" placeholder="資料異常，請手動輸入"
                     id="manual_${item.symbol}"
-                    style="margin-left:8px; width:120px; padding:2px 6px; border:1px solid #dc2626; border-radius:4px;"
+                    style="width:160px; padding:2px 6px; border:1px solid #dc2626; border-radius:4px;"
                     onchange="updateManualPrice('${item.symbol}', this.value)" />`;
                 }
+
                 return `${item.symbol} 參考進場價：${item.close}`;
             })
             .join("<br>");
