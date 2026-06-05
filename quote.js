@@ -1,5 +1,21 @@
 const API_URL = "https://finbuilder-api.onrender.com/api/price";
-fetch('https://finbuilder-api.onrender.com/api/price/AAPL?date=2026-01-01').catch(() => {});
+
+// 頁面載入時自動喚醒後端
+const wakeUpBackend = fetch(`${API_URL}/AAPL?date=2026-01-01`)
+    .then(() => {
+        const wakeStatus = document.getElementById('wakeStatus');
+        if (wakeStatus) {
+            wakeStatus.textContent = '✅ 就緒，可以抓取';
+            wakeStatus.style.color = '#16a34a';
+        }
+    })
+    .catch(() => {
+        const wakeStatus = document.getElementById('wakeStatus');
+        if (wakeStatus) {
+            wakeStatus.textContent = '⚠️ 後端連線失敗，請稍後再試';
+            wakeStatus.style.color = '#dc2626';
+        }
+    });
 
 const quoteDateInput = document.querySelector("#quoteDate");
 const fetchPriceButton = document.querySelector("#fetchPrice");
@@ -139,16 +155,21 @@ async function fetchPricesForStocks(stocks) {
     try {
         priceStatus.textContent = `正在抓取 ${stocks.length} 檔標的前一交易日收盤價...`;
 
-        const results = await Promise.all(
-            stocks.map(async (stock) => {
-                const price = await getPreviousClosePrice(stock.symbol, quoteDate);
-                return { ...stock, ...price };
-            })
-        );
+        const results = [];
+        for (const stock of stocks) {
+            const price = await getPreviousClosePrice(stock.symbol, quoteDate);
+            results.push({ ...stock, ...price });
+            await new Promise(r => setTimeout(r, 200)); // 每支間隔 200ms
+        }
 
-        priceStatus.textContent = results
-            .map(item => `${item.symbol} 參考進場價：${item.close}`)
-            .join(" / ");
+        priceStatus.innerHTML = results
+            .map(item => {
+                if (!item.close || Number(item.close) === 0) {
+                    return `${item.symbol} 參考進場價：<span style="color:#dc2626;">Yahoo Finance 資料異常，請重新抓取或稍後再試！</span>`;
+                }
+                return `${item.symbol} 參考進場價：${item.close}`;
+            })
+            .join("<br>");
         return results;
     } catch (error) {
         priceStatus.textContent = error.message;
