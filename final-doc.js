@@ -360,7 +360,7 @@ function buildDocumentHtml(data) {
         return '<p style="text-align:center;margin:8px 0;"><img src="' + src + '" style="max-width:100%;display:inline-block;" /></p>';
     }).join('');
 
-        return '<h2 style="color:#c00000;text-align:center;font-size:20px;margin-bottom:16px;">' + escHtml(buildTitle(data)) + '</h2>' +
+    return '<h2 style="color:#c00000;font-size:20px;margin-bottom:16px;">' + escHtml(buildTitle(data)) + '</h2>' +
         '<p><strong>期初價：</strong>對任一連結標的而言，其交易日之價格。</p>' +
         '<p><strong>記憶式自動提前出場價：</strong>對任一連結標的而言，其期初價 ' + data.ko + '%' + (data.productType === 'STEPDOWN' && data.stepDown ? '後每月降 ' + data.stepDown + '%' : '') + '。</p>' +
         '<p><strong>執行價(轉換價)：</strong>對任一連結標的而言，其期初價之 <span style="color:#c00000;">' + data.strike + '%</span>。</p>' +
