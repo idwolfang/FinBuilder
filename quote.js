@@ -168,7 +168,7 @@ async function fetchPricesForStocks(stocks) {
         const priceLabel = document.getElementById("priceLabel");
         if (priceLabel) {
             const tradeDate = results.find(r => r.tradeDate)?.tradeDate?.replace(/-/g, '/') || '';
-            priceLabel.textContent = `以下為前一交易日${tradeDate ? `（${tradeDate}）` : ''}收盤價`;
+            priceLabel.textContent = `以下為 ${tradeDate} 收盤價`;
             priceLabel.style.setProperty("display", "block", "important");
         }
 
