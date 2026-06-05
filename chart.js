@@ -20,7 +20,10 @@ async function generateChartForStock(symbol, name, strikePercent, koPercent) {
     );
 
     const lastClose = closes[closes.length - 1];
-    const REF_ENTRY = lastClose;
+    const priceResult = window._lastPriceResults?.find(r => r.symbol === symbol);
+    const REF_ENTRY = priceResult && Number(priceResult.close) > 0
+        ? Number(priceResult.close)
+        : lastClose;
     const REF_STRIKE = Math.round(REF_ENTRY * (strikePercent / 100) * 100) / 100;
     const REF_KO = Math.round(REF_ENTRY * (koPercent / 100) * 100) / 100;
 
@@ -177,7 +180,10 @@ function bindChartButton() {
             x.close >= (i > 0 ? d.data[i - 1].close : x.open) ? "#e05c5c" : "#4caf7d"
         );
         const lastClose = closes[closes.length - 1];
-        const REF_ENTRY = lastClose;
+        const priceResult = window._lastPriceResults?.find(r => r.symbol === d.symbol);
+        const REF_ENTRY = priceResult && Number(priceResult.close) > 0
+            ? Number(priceResult.close)
+            : lastClose;
         const REF_STRIKE = Math.round(REF_ENTRY * (d.strikePercent / 100) * 100) / 100;
         const REF_KO = Math.round(REF_ENTRY * (d.koPercent / 100) * 100) / 100;
 
