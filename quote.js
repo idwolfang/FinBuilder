@@ -187,7 +187,9 @@ async function fetchPricesForStocks(stocks) {
 async function getPreviousClosePrice(symbol, quoteDate) {
     const url = `${API_URL}/${encodeURIComponent(symbol)}?date=${encodeURIComponent(quoteDate)}`;
     const response = await fetch(url);
-    if (!response.ok) throw new Error(`抓不到 ${symbol} 資料，請確認 API 是否正常運作。`);
+    if (!response.ok) {
+        return { tradeDate: null, close: "0" };
+    }
     const data = await response.json();
     return {
         tradeDate: data.tradeDate,
