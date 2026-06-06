@@ -176,10 +176,11 @@ async function fetchPricesForStocks(stocks) {
             .map(item => {
                 if (!item.close || Number(item.close) === 0) {
                     return `${item.symbol} 參考進場價：
-                    <input type="number" step="0.01" placeholder="資料異常，請手動輸入"
+                    <input type="number" step="0.01"
                     id="manual_${item.symbol}"
                     style="width:160px; padding:2px 6px; border:1px solid #dc2626; border-radius:4px;"
-                    onchange="updateManualPrice('${item.symbol}', this.value)" />`;
+                    onchange="updateManualPrice('${item.symbol}', this.value)" 
+                    placeholder="資料未更新，請手動輸入" />`;
                 }
 
                 return `${item.symbol} 參考進場價：${item.close}`;
