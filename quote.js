@@ -371,6 +371,17 @@ window.addEventListener("DOMContentLoaded", () => {
         const mm = String(today.getMonth() + 1).padStart(2, '0');
         const dd = String(today.getDate()).padStart(2, '0');
         quoteDateInput.value = `${yyyy}-${mm}-${dd}`;
+
+        // 日期改變時顯示警告，提醒重新抓取
+        quoteDateInput.addEventListener("change", () => {
+            const priceLabel = document.getElementById("priceLabel");
+            if (priceLabel) {
+                priceLabel.textContent = "⚠️ 日期已變更，請重新點擊「抓取參考進場價」";
+                priceLabel.style.setProperty("display", "block", "important");
+                priceLabel.style.color = "#dc2626";
+            }
+            window._lastPriceResults = null;
+        });
     }
 });
 
