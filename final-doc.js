@@ -342,14 +342,14 @@ function buildDocumentHtml(data) {
 
     var couponBlock = data.productType === 'DAC'
         ? '<p>每月配息：於各交割日，發行機構將依下列計算公式以美元為計價單位給付：</p>' +
-        '<p><strong>✤&emsp;每月配息金額</strong> = 商品面額 × 100% × <strong style="color:#c00000;">' + parseFloat(data.coupon).toFixed(4) + '%</strong> × (1/12)' +
-        '（四捨五入至小數點後第 4 位）× (n/N)</p>' +
+        '<p><strong>✤&emsp;每月配息金額</strong> = 商品面額 × 100% × <strong style="color:#c00000;">' + parseFloat(data.coupon).toFixed(2) + '%</strong> × (1/12)' +
+        '（四捨五入至小數點後第 2 位）× (n/N)</p>' +
         '<p><strong>✤&emsp;</strong>n = 所有連結標的之<u>收盤價同時大於或等於其配息下層界線</u>之觀察日天數</p>' +
         '<p><strong>✤&emsp;</strong>N = 觀察期間的觀察日總數</p>' +
         '<p><strong>✤&emsp;配息觀察期間及配息交割日</strong></p>'
         : '<p>每月固定配息：於各交割日，發行機構將依下列計算公式以美元為計價單位給付：</p>' +
-        '<p><strong>✤&emsp;每月配息金額</strong> = 商品面額 × 100% × <strong style="color:#c00000;">' + parseFloat(data.coupon).toFixed(4) + '%</strong> × (1/12)' +
-        '（四捨五入至小數點後第 4 位）</p>' +
+        '<p><strong>✤&emsp;每月配息金額</strong> = 商品面額 × 100% × <strong style="color:#c00000;">' + parseFloat(data.coupon).toFixed(2) + '%</strong> × (1/12)' +
+        '（四捨五入至小數點後第 2 位）</p>' +
         '<p><strong>✤&emsp;配息觀察期間及配息交割日：</strong></p>';
 
     var stockImagesHtml = (data.imgStockList || []).map(function (src) {
