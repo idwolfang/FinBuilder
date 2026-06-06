@@ -8,7 +8,14 @@ let chartKo = 0;
 async function generateChartForStock(symbol, name, strikePercent, koPercent) {
 
     // 抓歷史資料
-    const res = await fetch(`${CHART_API_URL}/${symbol}`);
+    const tradeDate = window._lastPriceResults?.find(r => r.symbol === symbol)?.tradeDate
+        || window._lastPriceResults?.[0]?.tradeDate
+        || '';
+    const historyUrl = tradeDate
+        ? `${CHART_API_URL}/${symbol}?endDate=${tradeDate}`
+        : `${CHART_API_URL}/${symbol}`;
+    const res = await fetch(historyUrl);
+
     if (!res.ok) throw new Error(`無法取得 ${symbol} 歷史資料`);
     const data = await res.json();
 
