@@ -122,6 +122,11 @@ function bindChartButton() {
             return;
         }
 
+        if (!window._lastPriceResults || window._lastPriceResults.length === 0) {
+            document.getElementById("priceStatus").textContent = "請先點擊「抓取參考進場價」。";
+            return;
+        }
+
         const strike = Number(document.getElementById("strike").value);
         const ko = Number(document.getElementById("ko").value);
 
