@@ -127,13 +127,20 @@ function getQuoteForm() {
     const coupon = Number(document.querySelector("#coupon").value);
     const eki = Number(document.querySelector("#eki").value);
     const stepDown = Number(document.querySelector("#stepDown").value) || 0;
+    const productType = document.querySelector("#productType").value;
 
     if (!strike || !ko || !coupon) {
         alert("請填寫完整的 Strike, KO, Coupon... 等參數");
         return;
     }
 
+    if (productType === "FCN（固定配息）步階式出場" && !stepDown) {
+        alert("步階式出場請填寫「每月遞減 %」");
+        return;
+    }
+
     return {
+        productCode: document.querySelector("#productCode").value.trim(),
         productType: document.querySelector("#productType").value,
         tenor: document.querySelector("#tenor").value,
         currency: document.querySelector("#currency").value,
@@ -288,10 +295,20 @@ function renderQuote(form, priceResults) {
     // 處理發行機構，若選為 "-" 則不顯示
     const issuerText = form.issuer !== "-" ? form.issuer : "";
 
+    // 商品代號：沒輸入就不顯示這一列
+    const productCodeRowHTML = form.productCode ? `
+        <tr>
+            <td class="label-en" style="background-color: ${labelBgColor};">No.</td>
+            <td class="label-zh" style="background-color: ${labelBgColor};">商品代號</td>
+            <td colspan="${valueColspan}" class="value-highlight">${form.productCode}</td>
+        </tr>
+    ` : '';
+
     quotePreview.innerHTML = `
     <div class="capture-area">
         <table class="modern-quote-table">
-            <tbody>
+<tbody>
+                ${productCodeRowHTML}
                 <tr>
                     <td class="label-en" style="background-color: ${labelBgColor};">Type</td>
                     <td class="label-zh" style="background-color: ${labelBgColor};">類型</td>
