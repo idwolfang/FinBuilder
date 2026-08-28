@@ -4,8 +4,9 @@ let chartStocks = [];      // 所有勾選的標的
 let chartCurrentIndex = 0; // 目前顯示第幾個
 let chartStrike = 0;
 let chartKo = 0;
+let chartEki = 0;
 
-async function generateChartForStock(symbol, name, strikePercent, koPercent) {
+async function generateChartForStock(symbol, name, strikePercent, koPercent, ekiPercent) {
 
     // 抓歷史資料
     const tradeDate = window._lastPriceResults?.find(r => r.symbol === symbol)?.tradeDate
@@ -33,6 +34,7 @@ async function generateChartForStock(symbol, name, strikePercent, koPercent) {
         : lastClose;
     const REF_STRIKE = Math.round(REF_ENTRY * (strikePercent / 100) * 100) / 100;
     const REF_KO = Math.round(REF_ENTRY * (koPercent / 100) * 100) / 100;
+    const REF_EKI = ekiPercent > 0 ? Math.round(REF_ENTRY * (ekiPercent / 100) * 100) / 100 : null;
 
     const traceLine = {
         x: dates, y: closes,
@@ -78,18 +80,23 @@ async function generateChartForStock(symbol, name, strikePercent, koPercent) {
         paper_bgcolor: "#fff"
     };
 
+    const traces = [
+        traceLine,
+        makeHLine(REF_ENTRY, `參考進場價(${REF_ENTRY})`, "#e05c5c", "dash"),
+        makeHLine(REF_STRIKE, `執行價${strikePercent}%(${REF_STRIKE})`, "#e8a020", "dash"),
+        makeHLine(REF_KO, `出場價${koPercent}%(${REF_KO})`, "#8e44ad", "dash"),
+    ];
+    if (REF_EKI !== null) {
+        traces.push(makeHLine(REF_EKI, `EKI${ekiPercent}%(${REF_EKI})`, "#2563eb", "dash"));
+    }
+    traces.push(traceVol);
+
     // 用隱藏的 div 產生 Plotly 圖，再轉成靜態圖片
     const tempDiv = document.createElement("div");
     tempDiv.style.cssText = "position:fixed; left:-9999px; top:0; width:900px; height:500px;";
     document.body.appendChild(tempDiv);
 
-    await Plotly.newPlot(tempDiv, [
-        traceLine,
-        makeHLine(REF_ENTRY, `參考進場價(${REF_ENTRY})`, "#e05c5c", "dash"),
-        makeHLine(REF_STRIKE, `執行價${strikePercent}%(${REF_STRIKE})`, "#e8a020", "dash"),
-        makeHLine(REF_KO, `出場價${koPercent}%(${REF_KO})`, "#8e44ad", "dash"),
-        traceVol
-    ], layout, { responsive: false });
+    await Plotly.newPlot(tempDiv, traces, layout, { responsive: false });
 
     const imgData = await Plotly.toImage(tempDiv, { format: "png", width: 900, height: 500 });
     document.body.removeChild(tempDiv);
@@ -105,7 +112,7 @@ async function generateChartForStock(symbol, name, strikePercent, koPercent) {
         : "";
 
     // 儲存目前圖的資料供互動線圖用
-    window._chartLastData = { symbol, name, strikePercent, koPercent, data };
+    window._chartLastData = { symbol, name, strikePercent, koPercent, ekiPercent, data };
 }
 
 function bindChartButton() {
@@ -129,6 +136,7 @@ function bindChartButton() {
 
         const strike = Number(document.getElementById("strike").value);
         const ko = Number(document.getElementById("ko").value);
+        const eki = Number(document.getElementById("eki").value) || 0;
 
         if (!strike || !ko) {
             alert("請先填寫 Strike % 和 KO %");
@@ -140,6 +148,7 @@ function bindChartButton() {
         chartCurrentIndex = 0;
         chartStrike = strike;
         chartKo = ko;
+        chartEki = eki;
 
         // 顯示燈箱
         document.getElementById("chartModal").classList.add("active");
@@ -149,7 +158,8 @@ function bindChartButton() {
                 chartStocks[0].symbol,
                 chartStocks[0].name,
                 chartStrike,
-                chartKo
+                chartKo,
+                chartEki
             );
         } catch (e) {
             alert(e.message);
@@ -163,7 +173,7 @@ function bindChartButton() {
             await generateChartForStock(
                 chartStocks[chartCurrentIndex].symbol,
                 chartStocks[chartCurrentIndex].name,
-                chartStrike, chartKo
+                chartStrike, chartKo, chartEki
             );
         }
     });
@@ -175,7 +185,7 @@ function bindChartButton() {
             await generateChartForStock(
                 chartStocks[chartCurrentIndex].symbol,
                 chartStocks[chartCurrentIndex].name,
-                chartStrike, chartKo
+                chartStrike, chartKo, chartEki
             );
         }
     });
@@ -198,6 +208,7 @@ function bindChartButton() {
             : lastClose;
         const REF_STRIKE = Math.round(REF_ENTRY * (d.strikePercent / 100) * 100) / 100;
         const REF_KO = Math.round(REF_ENTRY * (d.koPercent / 100) * 100) / 100;
+        const REF_EKI = d.ekiPercent > 0 ? Math.round(REF_ENTRY * (d.ekiPercent / 100) * 100) / 100 : null;
 
         const hLine = (y, label, color) => ({
             x: [dates[0], dates[dates.length - 1]], y: [y, y],
@@ -216,14 +227,17 @@ function bindChartButton() {
             hLine(REF_ENTRY, "參考進場價(" + REF_ENTRY + ")", "#e05c5c"),
             hLine(REF_STRIKE, "執行價" + d.strikePercent + "%(" + REF_STRIKE + ")", "#e8a020"),
             hLine(REF_KO, "出場價" + d.koPercent + "%(" + REF_KO + ")", "#8e44ad"),
-            {
-                x: dates, y: vols,
-                type: "bar", name: "成交量",
-                marker: { color: colors },
-                xaxis: "x", yaxis: "y2",
-                showlegend: false
-            }
         ];
+        if (REF_EKI !== null) {
+            traces.push(hLine(REF_EKI, "EKI" + d.ekiPercent + "%(" + REF_EKI + ")", "#2563eb"));
+        }
+        traces.push({
+            x: dates, y: vols,
+            type: "bar", name: "成交量",
+            marker: { color: colors },
+            xaxis: "x", yaxis: "y2",
+            showlegend: false
+        });
 
         const layout = {
             title: { text: d.symbol + " " + d.name, font: { size: 16 } },

@@ -46,11 +46,14 @@
                         <label><input type="checkbox" name="stock" value="ASML" data-name="艾司摩爾" /> ASML 艾司摩爾</label>
                         <label><input type="checkbox" name="stock" value="AVGO" data-name="博通" /> AVGO 博通</label>
                         <label><input type="checkbox" name="stock" value="CRM" data-name="賽富時" /> CRM 賽富時</label>
+                        <label><input type="checkbox" name="stock" value="DELL" data-name="戴爾" /> DELL 戴爾</label>
                         <label><input type="checkbox" name="stock" value="GLW" data-name="康寧" /> GLW 康寧</label>
                         <label><input type="checkbox" name="stock" value="GOOG" data-name="谷歌" /> GOOG 谷歌</label>
                         <label><input type="checkbox" name="stock" value="GOOGL" data-name="谷歌" /> GOOGL 谷歌</label>
                         <label><input type="checkbox" name="stock" value="INTC" data-name="英特爾" /> INTC 英特爾</label>
+                        <label><input type="checkbox" name="stock" value="LRCX" data-name="科林研發" /> LRCX 科林研發</label>
                         <label><input type="checkbox" name="stock" value="META" data-name="臉書" /> META 臉書</label>
+                        <label><input type="checkbox" name="stock" value="MRVL" data-name="邁威爾" /> MRVL 邁威爾</label>
                         <label><input type="checkbox" name="stock" value="MSFT" data-name="微軟" /> MSFT 微軟</label>
                         <label><input type="checkbox" name="stock" value="MSTR" data-name="微策略" /> MSTR 微策略</label>
                         <label><input type="checkbox" name="stock" value="MU" data-name="美光" /> MU 美光</label>
@@ -78,8 +81,9 @@
                         <label><input type="checkbox" name="stock" value="F" data-name="福特" /> F 福特</label>
                         <label><input type="checkbox" name="stock" value="GS" data-name="高盛" /> GS 高盛</label>
                         <label><input type="checkbox" name="stock" value="JPM" data-name="摩根大通" /> JPM 摩根大通</label>
+                        <label><input type="checkbox" name="stock" value="LLY" data-name="禮來" /> LLY 禮來</label>
                         <label><input type="checkbox" name="stock" value="NKE" data-name="耐吉" /> NKE 耐吉</label>
-                        <label><input type="checkbox" name="stock" value="PLTR" data-name="帕蘭提爾" /> PLTR 帕蘭提爾</label>
+                        <label><input type="checkbox" name="stock" value="PLTR" data-name="帕蘭泰爾" /> PLTR 帕蘭泰爾</label>
                         <label><input type="checkbox" name="stock" value="PYPL" data-name="貝寶" /> PYPL 貝寶</label>
                         <label><input type="checkbox" name="stock" value="SOFI" data-name="索飛" /> SOFI 索飛</label>
                         <label><input type="checkbox" name="stock" value="UAL" data-name="聯合航空" /> UAL 聯合航空</label>
@@ -131,6 +135,7 @@
                     <select id="productType">
                         <option value="FCN（固定配息）">FCN（固定配息）</option>
                         <option value="FCN（固定配息）步階式出場">FCN（固定配息）步階式出場</option>
+                        <option value="Express FCN(加速到期固定配息)">Express FCN(加速到期固定配息)</option>
                         <option value="DAC（區間配息）">DAC（區間配息）</option>
                     </select>
                 </div>
@@ -192,9 +197,15 @@
                     <input id="eki" type="number" inputmode="decimal" step="0.01" placeholder="無則留空" />
                 </div>
 
+                <div class="field" id="firstMonthMultiplierField" style="display: none;">
+                    <label>第一個月倍數</label>
+                    <input id="firstMonthMultiplier" type="number" inputmode="decimal" step="0.01" placeholder="無則留空" />
+                </div>
+
                 <div class="field">
-                    <label>KO Start 開鎖</label>
+                    <label>KO Start 閉鎖</label>
                     <select id="koStart">
+                        <option value="發行日+1日">發行日+1日</option>
                         <option value="1M" selected>1M</option>
                         <option value="2M">2M</option>
                         <option value="3M">3M</option>

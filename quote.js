@@ -32,6 +32,7 @@ const closeModalBtn = document.getElementById("closeModal");
 const productTypeSelect = document.getElementById("productType");
 const stepDownField = document.getElementById("stepDownField");
 const koLabelText = document.getElementById("koLabelText");
+const firstMonthMultiplierField = document.getElementById("firstMonthMultiplierField");
 
 productTypeSelect.addEventListener("change", function () {
     if (this.value === "FCN（固定配息）步階式出場") {
@@ -40,6 +41,12 @@ productTypeSelect.addEventListener("change", function () {
     } else {
         stepDownField.style.display = "none";
         koLabelText.textContent = "KO %";
+    }
+
+    if (this.value === "Express FCN(加速到期固定配息)") {
+        firstMonthMultiplierField.style.display = "block";
+    } else {
+        firstMonthMultiplierField.style.display = "none";
     }
 });
 
@@ -128,6 +135,7 @@ function getQuoteForm() {
     const eki = Number(document.querySelector("#eki").value);
     const stepDown = Number(document.querySelector("#stepDown").value) || 0;
     const productType = document.querySelector("#productType").value;
+    const firstMonthMultiplier = document.querySelector("#firstMonthMultiplier").value;
 
     if (!strike || !ko || !coupon) {
         alert("請填寫完整的 Strike, KO, Coupon... 等參數");
@@ -149,6 +157,7 @@ function getQuoteForm() {
         stepDown,
         coupon,
         eki,
+        firstMonthMultiplier,
         koStart: document.querySelector("#koStart").value,
         memoryKo: document.querySelector("#memoryKo").value,
         issuer: document.querySelector("#issuer").value,
@@ -186,7 +195,7 @@ async function fetchPricesForStocks(stocks) {
                     <input type="number" step="0.01"
                     id="manual_${item.symbol}"
                     style="width:160px; padding:2px 6px; border:1px solid #dc2626; border-radius:4px;"
-                    onchange="updateManualPrice('${item.symbol}', this.value)" 
+                    onchange="updateManualPrice('${item.symbol}', this.value)"
                     placeholder="資料未更新，請手動輸入" />`;
                 }
 
@@ -264,6 +273,20 @@ function renderQuote(form, priceResults) {
         </tr>
     ` : '';
 
+    // =========================================
+    // 第一個月倍數（Express FCN 專用）動態顯示控制
+    // 只有選到 Express FCN 且有填值才顯示，放在 EKI 跟 KO 之間
+    // =========================================
+    const showMultiplier = form.productType === "Express FCN(加速到期固定配息)" && form.firstMonthMultiplier !== "";
+
+    const multiplierRowHTML = showMultiplier ? `
+        <tr>
+            <td class="label-en" style="background-color: ${labelBgColor};">Multiplier</td>
+            <td class="label-zh" style="background-color: ${labelBgColor};">第一個月倍數</td>
+            <td colspan="${valueColspan}" class="value-highlight">${Number(form.firstMonthMultiplier).toFixed(2)}</td>
+        </tr>
+    ` : '';
+
     const ekiHeaderHTML = showEki
         ? `<td class="label-zh" style="background-color: ${labelBgColor};">觸及生效價</td>`
         : '';
@@ -325,6 +348,7 @@ function renderQuote(form, priceResults) {
                     <td colspan="${valueColspan}" class="value-highlight">${Number(form.strike).toFixed(2)}%</td>
                 </tr>
                 ${ekiRowHTML}
+                ${multiplierRowHTML}
                 <tr>
                     <td class="label-en" style="background-color: ${labelBgColor};">KO</td>
                     <td class="label-zh" style="background-color: ${labelBgColor};">出場價</td>
@@ -354,7 +378,7 @@ function renderQuote(form, priceResults) {
                     <td colspan="${issuerColspan}" class="issuer-title" style="background-color: ${labelBgColor};">發行機構：${issuerText}</td>
                 </tr>
             </tbody>
-            
+
             <tbody class="bottom-section">
                 <tr>
                     <td colspan="2" rowspan="2" class="label-zh align-middle" style="background-color: ${labelBgColor};">連結標的</td>
