@@ -7,21 +7,17 @@
     <link rel="stylesheet" href="shared.css" />
     <link rel="stylesheet" href="quote.css" />
     <link rel="stylesheet" href="final-doc.css" />
+    <link rel="stylesheet" href="pdfgen.css" />
     <link rel="icon" type="image/png" href="./favicon.png">
 </head>
 
 <body>
     <nav class="topbar">
         <div class="brand">CYF Toolkits</div>
-        <a href="#" class="nav-disabled">總覽<span class="status-badge">Unavail</span></a>
 
         <a class="active" href="#" data-section="quote">報價</a>
         <a href="#" data-section="final-doc">最終文件<span class="status-badge">Test</span></a>
-
-        <a href="#" class="nav-disabled">商品<span class="status-badge">Unavail</span></a>
-        <a href="#" class="nav-disabled">客戶<span class="status-badge">Unavail</span></a>
-        <a href="#" class="nav-disabled">報告<span class="status-badge">Unavail</span></a>
-
+        <a href="#" data-section="pdf-gen">文件PDF<span class="status-badge">Test</span></a>
     </nav>
 
     <main class="layout" id="section-quote">
@@ -450,6 +446,41 @@
         </aside>
     </main>
 
+    <main class="layout" id="section-pdf-gen" style="display:none">
+        <section class="panel">
+            <h2>身分文件PDF產生器</h2>
+
+            <div class="pdfgen-upload-wrapper">
+                <div class="fd-upload-zone" id="pdfgen-zone">
+                    <input type="file" id="pdfgen-fileInput" accept="image/*" multiple />
+                    <div class="fd-upload-ph">
+                        <span class="fd-upload-icon">⬆</span>
+                        <p>點擊上傳身分證、存摺、戶籍謄本等文件圖片</p>
+                        <p class="fd-upload-sub">支援 PNG、JPG，可一次選多張，也可分批繼續上傳</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pdfgen-list" id="pdfgen-list"></div>
+
+            <div class="pdfgen-actions">
+                <button id="pdfgen-previewBtn" type="button">預覽排版</button>
+                <p id="pdfgen-status" style="font-size:12px; color:#16a34a; margin-top:6px; margin-left:18px;"></p>
+            </div>
+        </section>
+
+        <aside class="quote-help">
+            <h2>使用說明</h2>
+            <ol>
+                <li>上傳身分證、存摺、戶籍謄本等文件圖片（可多選、可分批上傳）</li>
+                <li>逐張選擇文件類型：身分證／存摺／其他文件</li>
+                <li>身分證、存摺可勾選「與上一張合併同頁」；其他文件固定各自一頁滿版</li>
+                <li>可用 ↑↓ 調整順序、✖ 刪除單張</li>
+                <li>點擊「預覽排版」確認無誤後，再於燈箱中下載 PDF</li>
+            </ol>
+        </aside>
+    </main>
+
     <footer class="site-footer">
         © 2026 cyfang｜All rights reserved．本工具由 cyfang 獨立開發，未經授權禁止商業使用．回報問題請<a href="mailto:kennyxo@gmail.com">點此反映</a>．2026/06/06
     </footer>
@@ -494,6 +525,25 @@
         </div>
     </div>
 
+    <div id="pdfgenPreviewModal" class="modal-overlay">
+        <div class="modal-content" style="max-width:640px; width:95%;">
+            <div class="img-scroll-container" style="max-height:70vh;">
+                <div id="pdfgenPreviewPages"></div>
+            </div>
+            <div class="modal-actions" style="flex-direction:column; gap:8px;">
+                <div style="display:flex; align-items:center; justify-content:center; gap:12px; width:100%;">
+                    <button id="pdfgenPagePrev" type="button" style="display:none;">⬅️</button>
+                    <span id="pdfgenPageInfo" style="font-size:14px; color:#666;"></span>
+                    <button id="pdfgenPageNext" type="button" style="display:none;">➡️</button>
+                </div>
+                <div style="display:flex; gap:12px; width:100%;">
+                    <button id="pdfgenConfirmDownload" type="button">✔ 確認並下載PDF</button>
+                    <button id="pdfgenCloseModal" type="button" class="btn-close">✖ 關閉</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/html-docx-js/dist/html-docx.js"></script>
     <script src="core.js"></script>
@@ -501,5 +551,7 @@
     <script src="final-doc.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.26.0/plotly.min.js"></script>
     <script src="chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="pdfgen.js"></script>
 </body>
 </html>

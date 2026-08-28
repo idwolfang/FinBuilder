@@ -1,0 +1,131 @@
+﻿/* ============================================================
+   pdfgen.css — 身分文件 PDF 產生器 專用樣式
+   繼承 shared.css 的 CSS variables，不重複宣告
+   上傳框（.fd-upload-zone 等）直接沿用 final-doc.css 既有樣式
+   ============================================================ */
+
+/* ---------- 上傳區 ---------- */
+.pdfgen-upload-wrapper {
+    padding: 18px;
+}
+
+/* ---------- 圖片列表 ---------- */
+.pdfgen-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 0 18px;
+}
+
+.pdfgen-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    border: 1px solid var(--color-border-panel, #d7dde8);
+    border-radius: var(--radius-input, 6px);
+    padding: 10px 12px;
+    background: #fff;
+}
+
+.pdfgen-thumb {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid var(--color-border-img, #e2e8f0);
+    flex-shrink: 0;
+}
+
+.pdfgen-item-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+    .pdfgen-item-info select {
+        height: var(--height-input, 36px);
+        border: 1px solid var(--color-border-input, #cbd3df);
+        border-radius: var(--radius-input, 6px);
+        padding: var(--padding-input, 0 12px);
+        font-size: var(--font-size-ui, 14px);
+        color: var(--color-text, #0f1b33);
+        background: white;
+        max-width: 160px;
+    }
+
+.pdfgen-merge-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--font-size-sm, 13px);
+    color: var(--color-text-mid, #17233d);
+}
+
+    .pdfgen-merge-label input {
+        width: 16px;
+        height: 16px;
+        margin: 0;
+    }
+
+.pdfgen-fixed-hint {
+    font-size: var(--font-size-xs, 12px);
+    color: var(--color-text-ghost, #94a3b8);
+}
+
+.pdfgen-item-actions {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+    .pdfgen-item-actions button {
+        width: 30px;
+        height: 30px;
+        padding: 0;
+        margin: 0;
+        font-size: 13px;
+    }
+
+    .pdfgen-item-actions .pdfgen-remove {
+        background: var(--color-border-img, #e2e8f0);
+        color: var(--color-accent-red, #dc2626);
+    }
+
+        .pdfgen-item-actions .pdfgen-remove:hover {
+            background: #fee2e2;
+        }
+
+/* ---------- 動作列 ---------- */
+.pdfgen-actions {
+    padding: 18px;
+}
+
+/* ---------- 預覽燈箱：A4 頁面模擬 ---------- */
+.pdfgen-page {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 210 / 297;
+    background: white;
+    border: 1px solid var(--color-border-img, #e2e8f0);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.pdfgen-page-rect {
+    position: absolute;
+    object-fit: fill;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* ---------- 手機版響應式修正 ---------- */
+@media (max-width: 600px) {
+    .pdfgen-item {
+        flex-wrap: wrap;
+    }
+
+    .pdfgen-item-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+}

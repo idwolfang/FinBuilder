@@ -7,6 +7,7 @@
     var sectionMap = {
         'quote': document.getElementById('section-quote'),
         'final-doc': document.getElementById('section-final-doc'),
+        'pdf-gen': document.getElementById('section-pdf-gen'),
     };
 
     document.querySelectorAll('.topbar a[data-section]').forEach(function (link) {
